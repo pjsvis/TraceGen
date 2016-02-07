@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "dependencies": {
+    "font-awesome": "*",
+    "foundation": "*",
+    "angular": "~1.4.8",
+    "bootstrap": "~3.3.6"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    },
+    "foundation": {
+      "main": [
+        "css/foundation.css",
+        "js/foundation.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css"
+      ]
+    }
+  }
+}
