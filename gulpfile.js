@@ -1,3 +1,4 @@
+/// <reference path="typings/tsd.d.ts" />
 var addStream     = require('add-stream');
 var gulp          = require('gulp');
 var nodemon       = require('gulp-nodemon');
