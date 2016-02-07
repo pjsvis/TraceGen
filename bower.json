@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "dependencies": {
     "font-awesome": "*",
-    "foundation": "*",
     "angular": "~1.4.8",
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "modernizr": "^3.3.1"
   },
   "overrides": {
     "bootstrap": {
@@ -13,12 +13,6 @@
         "less/bootstrap.less",
         "dist/css/bootstrap.css",
         "dist/js/bootstrap.js"
-      ]
-    },
-    "foundation": {
-      "main": [
-        "css/foundation.css",
-        "js/foundation.js"
       ]
     },
     "font-awesome": {

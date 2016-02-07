@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 
-module app.demo {
+namespace app.demo {
 
     'use strict';
 
