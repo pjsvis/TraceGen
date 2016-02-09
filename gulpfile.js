@@ -1,6 +1,8 @@
 ///<reference path="typings/tsd.d.ts"/>
 var addStream = require('add-stream');
 var gulp = require('gulp');
+var del = require('del');
+var glob = require('glob')
 var nodemon = require('gulp-nodemon');
 var inject = require('gulp-inject');
 var concat = require('gulp-concat');
@@ -26,6 +28,18 @@ gulp.task('lint', function () {
     return gulp.src(['public/src/**/*.ts'])
         .pipe(tslint())
         .pipe(tslint.report('default'));
+});
+
+// Clean out any js file generated locally by ts
+// NOTE: Get a list of *.ts files and convert the ext to js
+// then delete the list
+var filter = function(file) {
+    return file.replace(/.ts$/, '.js');
+};
+gulp.task('cleanJs', function() {
+    return glob('./public/src/**/*.ts', function(err, files) {
+        del(files.map(filter));
+    })
 });
 
 // Concatenate & minify Typescript 
@@ -100,7 +114,12 @@ gulp.task('inject', ['scripts', 'cssNano'], function () {
     var options = {
         bowerJson: require('./bower.json'),
         directory: './public/lib',
-        ignorePath: '../../public'
+        ignorePath: '../../public',
+        "overrides": {
+           "ag-grid": {
+               "main": ["dist/ag-grid.js"]
+           } 
+        }
     };
 
     return gulp.src('./public/*.html')
@@ -110,7 +129,7 @@ gulp.task('inject', ['scripts', 'cssNano'], function () {
 
 });
 
-gulp.task('serve', ['scripts', 'jsScripts', 'cssNano', 'inject'], function () {
+gulp.task('serve', [ 'cleanJs', 'scripts', 'jsScripts', 'cssNano', 'inject'], function () {
 
     var options = {
         restartable: "rs",
@@ -149,9 +168,9 @@ gulp.task('serve', ['scripts', 'jsScripts', 'cssNano', 'inject'], function () {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'scripts', 'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject', 'serve']);
+gulp.task('default', ['lint', 'cleanJs', 'scripts', 'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject', 'serve']);
 
-gulp.task('test', ['lint', 'scripts',  'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject']);
+gulp.task('test', ['lint', 'cleanJs', 'scripts',  'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject']);
 
 function prepareTemplates() {
 

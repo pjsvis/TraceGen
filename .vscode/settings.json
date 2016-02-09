@@ -10,7 +10,7 @@
         },
         "**/*.js.map": {},
         "public/lib/**/*.*": {},
-        "public/dist/**/*.*": {},
+       // "public/dist/**/*.*": {},
         "Scripts/*.*": {},
     }
 }

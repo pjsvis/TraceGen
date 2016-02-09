@@ -18,7 +18,6 @@
 /// <reference path="uglify-js/uglify-js.d.ts" />
 /// <reference path="gulp-sass/gulp-sass.d.ts" />
 /// <reference path="wiredep/wiredep.d.ts" />
-/// <reference path="underscore/underscore.d.ts" />
 /// <reference path="angularjs/angular-animate.d.ts" />
 /// <reference path="angular-toastr/angular-toastr.d.ts" />
 /// <reference path="angular-signalr-hub/angular-signalr-hub.d.ts" />
