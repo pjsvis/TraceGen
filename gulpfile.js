@@ -1,3 +1,4 @@
+/// <binding BeforeBuild='default' />
 ///<reference path="typings/tsd.d.ts"/>
 var addStream = require('add-stream');
 var gulp = require('gulp');
@@ -14,7 +15,8 @@ var templateCache = require('gulp-angular-templatecache');
 var ts = require('gulp-typescript');
 var tslint = require('gulp-tslint');
 var uglify = require('gulp-uglify');
-var sass = require('gulp-sass');
+// TODO: Replace with less
+//var sass = require('gulp-sass');
 var path = require('path');
 var wiredep = require('wiredep').stream;
 var _ = require('lodash');
@@ -76,12 +78,13 @@ gulp.task('jsScripts', function () {
         .pipe(gulp.dest('public/dist'));
 });
 
-
+// TODO: Replace with less compile
 // Compile, concat & minify sass
 gulp.task('sass', function () {
-    return gulp.src('public/src/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('public/dist/css'));
+   console.log('TODO: replace sass with less');
+   //return gulp.src('public/src/**/*.scss')
+   //    .pipe(sass().on('error', sass.logError))
+   //    .pipe(gulp.dest('public/dist/css'));
 });
 
 gulp.task('concatCss', ['sass'], function () {
@@ -168,9 +171,9 @@ gulp.task('serve', [ 'cleanJs', 'scripts', 'jsScripts', 'cssNano', 'inject'], fu
 });
 
 // Default Task
-gulp.task('default', ['lint', 'cleanJs', 'scripts', 'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject', 'serve']);
+gulp.task('default', ['lint', 'cleanJs', 'scripts', 'jsScripts',  'concatCss', 'cssNano', 'inject', 'serve']);
 
-gulp.task('test', ['lint', 'cleanJs', 'scripts',  'jsScripts', 'sass', 'concatCss', 'cssNano', 'inject']);
+gulp.task('test', ['lint', 'cleanJs', 'scripts',  'jsScripts',  'concatCss', 'cssNano', 'inject']);
 
 function prepareTemplates() {
 

@@ -1,20 +1,32 @@
 /// <reference path="../../../typings/tsd.d.ts" />
-angular.module('app').factory('UserDetailsService', function (HttpHelper) {
-    var baseHref = 'http://localhost:55693/OTS.UTP/';
-    var fac = {
-        getUserDetails: function () {
-            return HttpHelper.get(baseHref + 'api/User/Details');
-        }
-    };
-    return fac;
+interface IUserDetails {
+   Id: number;
+   UserName: string;
+   Description: string;
+   Role: string;
+   IsAdmin: boolean;
+   IsSupport: boolean;
+   IsTester: boolean;
+
+}
+
+interface IUserDetailsService {
+   getUserDetails: ng.IHttpPromise<IUserDetails>;
+}
+
+angular.module('app').factory('UserDetailsService', (HttpHelper): { getUserDetails: () => angular.IHttpPromise<IUserDetails> } => {
+   var baseHref = 'http://localhost:55693/OTS.UTP/';
+   return {
+      getUserDetails: (): ng.IHttpPromise<IUserDetails> => HttpHelper.get(baseHref + 'api/User/Details')
+   };
+
 });
 
-angular.module('app').controller('WebApiController', function (UserDetailsService) {
-    var vm = this;
-    //TODO: Add  login and etc
-    // UserDetailsService.getUserDetails().then(function (response) {
-    //     vm.userDetails = response.data;
-    // })
+angular.module('app').controller('WebApiController', UserDetailsService => {
+   UserDetailsService.getUserDetails().then(response => {
+      var userDetails: IUserDetails = response.data;
+      this.userDetails = userDetails;
+   });
 
 
 });

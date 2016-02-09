@@ -626,14 +626,12 @@
     <TypeScriptCompile Include="public\src\app.ts" />
     <TypeScriptCompile Include="public\src\app\app.routes.ts" />
     <Content Include="public\src\demo\demo.html" />
-    <Content Include="public\src\demo\demo.js" />
     <TypeScriptCompile Include="public\src\services\UserDetails.ts" />
-    <Content Include="public\src\services\angular-signalr-hub.js" />
-    <Content Include="public\src\services\HttpHelper.js" />
-    <Content Include="public\src\services\UserDetails.js" />
-    <Content Include="public\src\webapi\webapi.controller.js" />
+    <Content Include="public\src\services\AppState.js" />
+    <TypeScriptCompile Include="public\src\services\HttpHelper.ts" />
     <Content Include="public\src\webapi\webapi.tpl.html" />
     <Content Include="Web.config" />
+    <TypeScriptCompile Include="public\src\webapi\webapi.controller.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
