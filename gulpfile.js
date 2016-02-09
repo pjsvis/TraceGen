@@ -54,6 +54,24 @@ gulp.task('cleanMap', function() {
     })
 });
 
+// Compile typescript files in place and add sourcemaps
+gulp.task('compile', function () {
+
+    return gulp.src(['./src/app.ts', './src/**/*.ts'])
+        .pipe(addStream.obj(prepareTemplates()))
+        .pipe(sourceMaps.init())
+        .pipe(ts({
+            noImplicitAny: true,
+            suppressImplicitAnyIndexErrors: true
+            //allowJs: true,
+            //out: 'app.js'
+        }))
+        .pipe(gulp.dest('./src/**/*.*'))
+        //.pipe(rename('app.min.js'))
+        //.pipe(uglify())   // Don't uglify just yet
+        .pipe(sourceMaps.write('.'))
+        //.pipe(gulp.dest('dist'));
+});
 // Concatenate & minify Typescript 
 // NOTE: we must have app.ts here with the angular setter
 gulp.task('scripts', function () {
@@ -114,10 +132,13 @@ gulp.task('cssNano', ['sass', 'concatCss'], function () {
 gulp.task('inject', ['scripts', 'cssNano'], function () {
 
     // inject our dist files
-    var injectSrc = gulp.src([
-        './dist/app.css',
-        './dist/app.js'
-    ], { read: false });
+    // var injectSrc = gulp.src([
+    //     './dist/app.css',
+    //     './dist/app.js'
+    // ], { read: false });
+    
+    // Inject all of our src/**/*.js files along with our dist/app.css
+    var injectSrc = gulp.src(['./src/**/*.js', './dist/app.css'], {read:false})
 
     var injectOptions = {
         ignorePath: '/public'
@@ -180,6 +201,8 @@ gulp.task('serve', [ 'cleanJs', 'cleanMap', 'scripts', 'jsScripts', 'cssNano', '
         });
 });
 
+
+gulp.task('injectCompiled', ['compile', 'inject'])
 // Default Task
 gulp.task('default', ['lint', 'cleanJs', 'cleanMap', 'scripts', 'jsScripts',  'concatCss', 'cssNano', 'inject']);
 
