@@ -22,12 +22,12 @@ var wiredep = require('wiredep').stream;
 var _ = require('lodash');
 
 // Use var to hold src path glob 
-var tsSrc = ['public/src/app.ts', 'public/src/**/*.ts'];
-var tsJsSrc = ['public/src/app.ts', 'public/src/**/*.ts', 'public/src/**/*.js'];
+var tsSrc = ['src/app.ts', 'src/**/*.ts'];
+var tsJsSrc = ['src/app.ts', 'src/**/*.ts', 'src/**/*.js'];
 
 // Lint to keep us in line
 gulp.task('lint', function () {
-    return gulp.src(['public/src/**/*.ts'])
+    return gulp.src(['src/**/*.ts'])
         .pipe(tslint())
         .pipe(tslint.report('default'));
 });
@@ -38,9 +38,19 @@ gulp.task('lint', function () {
 var filter = function(file) {
     return file.replace(/.ts$/, '.js');
 };
+
+var filterMap = function(file) {
+    return file.replace(/.ts$/, '.js.map');
+};
 gulp.task('cleanJs', function() {
-    return glob('./public/src/**/*.ts', function(err, files) {
+    return glob('./src/**/*.ts', function(err, files) {
         del(files.map(filter));
+    })
+});
+
+gulp.task('cleanMap', function() {
+    return glob('./src/**/*.ts', function(err, files) {
+        del(files.map(filterMap));
     })
 });
 
@@ -48,7 +58,7 @@ gulp.task('cleanJs', function() {
 // NOTE: we must have app.ts here with the angular setter
 gulp.task('scripts', function () {
 
-    return gulp.src(['./public/src/app.ts', './public/src/**/*.ts'])
+    return gulp.src(['./src/app.ts', './src/**/*.ts'])
         .pipe(addStream.obj(prepareTemplates()))
         .pipe(sourceMaps.init())
         .pipe(ts({
@@ -57,47 +67,47 @@ gulp.task('scripts', function () {
             allowJs: true,
             out: 'app.js'
         }))
-        .pipe(gulp.dest('public/dist'))
+        .pipe(gulp.dest('dist'))
         .pipe(rename('app.min.js'))
         //.pipe(uglify())   // Don't uglify just yet
         .pipe(sourceMaps.write('.'))
-        .pipe(gulp.dest('public/dist'));
+        .pipe(gulp.dest('dist'));
 });
 
 // Compile remaining javascropt
 gulp.task('jsScripts', function () {
 //"**/*.js": { "when": "$(basename).ts"},
-    return gulp.src(['./public/src/**/*.js'])   
+    return gulp.src(['./src/**/*.js'])   
         .pipe(concat('appJs.js'))
-        .pipe(gulp.dest('public/dist'))    
+        .pipe(gulp.dest('dist'))    
         .pipe(sourceMaps.init())
-        .pipe(gulp.dest('public/dist'))
+        .pipe(gulp.dest('dist'))
         .pipe(rename('appJs.min.js'))
         //.pipe(uglify())   // Don't uglify just yet
         .pipe(sourceMaps.write('.'))
-        .pipe(gulp.dest('public/dist'));
+        .pipe(gulp.dest('dist'));
 });
 
 // TODO: Replace with less compile
 // Compile, concat & minify sass
 gulp.task('sass', function () {
    console.log('TODO: replace sass with less');
-   //return gulp.src('public/src/**/*.scss')
+   //return gulp.src('src/**/*.scss')
    //    .pipe(sass().on('error', sass.logError))
-   //    .pipe(gulp.dest('public/dist/css'));
+   //    .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('concatCss', ['sass'], function () {
-    return gulp.src('public/dist/css/**/*.css')
+    return gulp.src('dist/css/**/*.css')
         .pipe(concatCss("app.css"))
-        .pipe(gulp.dest('public/dist'))
+        .pipe(gulp.dest('ist'))
 });
 
 gulp.task('cssNano', ['sass', 'concatCss'], function () {
-    return gulp.src('public/dist/app.css')
+    return gulp.src('dist/app.css')
         .pipe(cssNano())
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('public/dist'));
+        .pipe(gulp.dest('dist'));
 });
 
 // Inject dist + bower lib files
@@ -105,8 +115,8 @@ gulp.task('inject', ['scripts', 'cssNano'], function () {
 
     // inject our dist files
     var injectSrc = gulp.src([
-        './public/dist/app.css',
-        './public/dist/app.js'
+        './dist/app.css',
+        './dist/app.js'
     ], { read: false });
 
     var injectOptions = {
@@ -116,7 +126,7 @@ gulp.task('inject', ['scripts', 'cssNano'], function () {
     // inject bower deps
     var options = {
         bowerJson: require('./bower.json'),
-        directory: './public/lib',
+        directory: './lib',
         ignorePath: '../../public',
         "overrides": {
            "ag-grid": {
@@ -125,14 +135,14 @@ gulp.task('inject', ['scripts', 'cssNano'], function () {
         }
     };
 
-    return gulp.src('./public/*.html')
+    return gulp.src('./*.html')
         .pipe(wiredep(options))
         .pipe(inject(injectSrc, injectOptions))
-        .pipe(gulp.dest('./public'));
+        .pipe(gulp.dest('./'));
 
 });
 
-gulp.task('serve', [ 'cleanJs', 'scripts', 'jsScripts', 'cssNano', 'inject'], function () {
+gulp.task('serve', [ 'cleanJs', 'cleanMap', 'scripts', 'jsScripts', 'cssNano', 'inject'], function () {
 
     var options = {
         restartable: "rs",
@@ -140,11 +150,11 @@ gulp.task('serve', [ 'cleanJs', 'scripts', 'jsScripts', 'cssNano', 'inject'], fu
         ext: "ts html scss",
         script: 'server.js',
         delayTime: 1,
-        watch: ['gulpfile.js, public/src/app.ts', 'public/src/**/*.ts', 'public/src/**/*.js', 'public/src/**/*(*.ts|*.js|*.html)', 'public/src/**/*(*.scss | *.css)'],
+        watch: ['gulpfile.js', 'src/app.ts', 'src/**/*.ts', 'src/**/*.js', 'src/**/*(*.ts|*.js|*.html)', 'src/**/*(*.scss | *.css)'],
         env: {
             'PORT': 3000
         },
-        ignore: ["public/dist/*", "public/dist/**/**"],
+        ignore: ["dist/*", "dist/**/**"],
         // bit faster if we only do what we need to
         tasks: function (changedFiles) {
             var tasks = [];
@@ -171,16 +181,16 @@ gulp.task('serve', [ 'cleanJs', 'scripts', 'jsScripts', 'cssNano', 'inject'], fu
 });
 
 // Default Task
-gulp.task('default', ['lint', 'cleanJs', 'scripts', 'jsScripts',  'concatCss', 'cssNano', 'inject', 'serve']);
+gulp.task('default', ['lint', 'cleanJs', 'cleanMap', 'scripts', 'jsScripts',  'concatCss', 'cssNano', 'inject']);
 
-gulp.task('test', ['lint', 'cleanJs', 'scripts',  'jsScripts',  'concatCss', 'cssNano', 'inject']);
+gulp.task('test', ['lint', 'cleanJs', 'cleanMap', 'scripts',  'jsScripts',  'concatCss', 'cssNano', 'inject']);
 
 function prepareTemplates() {
 
     // we get a conflict with the < % = var % > syntax for $templateCache
     // template header, so we'll just encode values to keep yo happy
     var encodedHeader = "angular.module(&quot;&lt;%= module %&gt;&quot;&lt;%= standalone %&gt;).run([&quot;$templateCache&quot;, function($templateCache:any) {";
-    return gulp.src('public/src/**/*.html')
+    return gulp.src('src/**/*.html')
         .pipe(templateCache('templates.ts', {
             root: "app-templates",
             module: "app.templates",
