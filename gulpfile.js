@@ -1,4 +1,4 @@
-/// <binding BeforeBuild='default' />
+/// <binding BeforeBuild='default' AfterBuild='cleanJs, cleanMap, serve' />
 ///<reference path="typings/tsd.d.ts"/>
 var addStream = require('add-stream');
 var gulp = require('gulp');

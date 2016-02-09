@@ -827,7 +827,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
-    <Folder Include="public\" />
     <Folder Include="src\directives\" />
   </ItemGroup>
   <ItemGroup>

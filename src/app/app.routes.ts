@@ -8,13 +8,13 @@ angular.module('app').config(function($routeProvider: ng.route.IRouteProvider) {
     $routeProvider
         .when('/', {
             // Support view
-            templateUrl: templateUrl,
+            templateUrl: 'app-templates/webapi/webapi.tpl.html',
             controllerAs: 'vm',
             controller: 'WebApiController'
         })
-        .when('/other', {
+        .otherwise( {
             // Tester view
-            templateUrl: templateUrl,
+            templateUrl: 'app-templates/webapi/webapi.tpl.html',
             controllerAs: 'vm',
             controller: 'UtpTraceSummaryController'
         }

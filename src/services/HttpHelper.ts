@@ -1,11 +1,45 @@
 ﻿/// <reference path="../../typings/tsd.d.ts" />
-interface IHttpHelper {
-   get: (string) => ng.IHttpPromise<any>;
-   post: (string, any) => ng.IHttpPromise<any>;
-}
+//class Service {
+
+//} 
+
+//class HttpHandlerService extends Service {
+//   httpService: ng.IHttpService;
+//   handlerUrl: string;
+
+//   constructor($http: ng.IHttpService) {
+//      super();
+//      this.httpService = $http;
+//   }
+
+//   useGetHandler(params: any): ng.IPromise<any> {
+//      var result: ng.IPromise<any> = this.httpService.get(this.handlerUrl, params)
+//         .then((response: any): ng.IPromise<any> => this.handlerResponded(response, params));
+//      return result;
+//   }
+
+//   usePostHandler(params: any): ng.IPromise<any> {
+//      var result: ng.IPromise<any> = this.httpService.post(this.handlerUrl, params)
+//         .then((response: any): ng.IPromise<any> => this.handlerResponded(response, params));
+//      return result;
+//   }
+
+//   handlerResponded(response: any, params: any): any {
+//      response.data.requestParams = params;
+//      return response.data;
+//   }
+
+//}
+
+
+
+//interface IHttpHelper {
+//   get: () => ng.IPromise<ng.IHttpPromiseCallback<any>>;
+//   post: () => ng.IPromise<ng.IHttpPromiseCallback<any>>;
+//}
 
 angular.module('app')
-   .factory('HttpHelper', function($http, $q, toastr) {
+   .factory('HttpHelper', function($http: ng.IHttpService, $q : ng.IPromise<any>, toastr) {
 
       var showError = function(response) {
          var title = 'Unexpected Error';
@@ -44,10 +78,10 @@ angular.module('app')
          // timeout: 10000
                  
       };
-      var fac: IHttpHelper = {
-         get: function(url: string): ng.IHttpPromise<any> {
+      var fac = {
+         get: function(url: string): ng.IPromise<any> {
 
-            return $http.get(url, config).then(function(response: ng.IHttpPromise<any>) {
+            return $http.get(url, config).then(function(response: ng.IPromise<any>) {
                if (angular.isUndefined(response)) {
                   showError(response);
                }
@@ -55,8 +89,15 @@ angular.module('app')
             }, function(response) { showError(response); });
          },
 
-         post: function(url: string, data: any): ng.IHttpPromise<any> {
+         post: function(url: string, data: any): ng.IPromise<any> {
             return $http.post(url, data, config).then(function(response: ng.IHttpPromise<any>) {
+               return response;
+            }, function(response) {
+               showError(response);
+            });
+         },
+         jsonp: function(url: string): ng.IPromise<any> {
+            return $http.jsonp(url + '?callback=JSON_CALLBACK', config).then(function(response: ng.IHttpPromise<any>) {
                return response;
             }, function(response) {
                showError(response);
