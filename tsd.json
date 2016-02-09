@@ -6,10 +6,79 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "473d37ca81c8d572d90925887baf5c619465c9a3"
+      "commit": "72f0056f69f9a2290d2589c1a692896d24406928"
     },
     "angularjs/angular.d.ts": {
-      "commit": "473d37ca81c8d572d90925887baf5c619465c9a3"
+      "commit": "72f0056f69f9a2290d2589c1a692896d24406928"
+    },
+    "angularjs/angular-route.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp/gulp.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "q/Q.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "node/node.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "orchestrator/orchestrator.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-nodemon/gulp-nodemon.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "vinyl/vinyl.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-inject/gulp-inject.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-concat/gulp-concat.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-rename/gulp-rename.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-sourcemaps/gulp-sourcemaps.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-typescript/gulp-typescript.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-tslint/gulp-tslint.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "source-map/source-map.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "uglify-js/uglify-js.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-uglify/gulp-uglify.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "gulp-sass/gulp-sass.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "wiredep/wiredep.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "underscore/underscore.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "angularjs/angular-animate.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
+    },
+    "angular-toastr/angular-toastr.d.ts": {
+      "commit": "72f0056f69f9a2290d2589c1a692896d24406928"
+    },
+    "angular-signalr-hub/angular-signalr-hub.d.ts": {
+      "commit": "72f0056f69f9a2290d2589c1a692896d24406928"
+    },
+    "signalr/signalr.d.ts": {
+      "commit": "72f0056f69f9a2290d2589c1a692896d24406928"
     }
   }
 }

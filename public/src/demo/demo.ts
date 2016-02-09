@@ -1,14 +1,15 @@
 /// <reference path="../../../typings/tsd.d.ts" />
-
 namespace app.demo {
 
     'use strict';
 
-    export interface IDemoCtrl {}
+    export interface IDemoCtrl { }
     export class DemoCtrl implements IDemoCtrl {
         constructor(
             public $scope: ng.IScope
-        ){}
+        ) {
+            // TODO: Figure out how to implement the controller as syntax
+        }
     }
 
     export interface IDemoService {
@@ -23,7 +24,7 @@ namespace app.demo {
         .directive("demo", function(): ng.IDirective {
             return {
                 templateUrl: 'app-templates/demo/demo.html',
-                controller:  DemoCtrl,
+                controller: DemoCtrl,
                 controllerAs: 'demoCtrlVM'
             };
         })

@@ -2,11 +2,11 @@
 
 	<h2>Hello directive!</h2>
 
-	<button class="btn btn-primary" ng-click="demoCtrlVM.demoService.getExcited = !demoCtrlVM.demoService.getExcited">
+	<button class="btn btn-primary" ng-click="vm.demoService.getExcited = !vm.demoService.getExcited">
 		Go ahead, click me - I'm wired up to ng ready to go!
 	</button>
-	<div ng-show="demoCtrlVM.demoService.getExcited">
+	<div ng-show="vm.demoService.getExcited">
 		<h3>Yeeehaww!</h3>
 	</div>
-
+<button class="btn btn-primary btn-sm" ng-click="vm.callWebApi()">Call WebApi</button>
 </div>

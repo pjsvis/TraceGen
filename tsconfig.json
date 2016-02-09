@@ -1,0 +1,17 @@
+﻿{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "sourceMap": true,
+        "watch": true,
+        "outFile": "public/dist/app.js",
+        "noLib": false,
+        "allowJs": false,
+        "listFiles": true 
+    },
+   
+    "files": [
+        "public/src/app.ts",
+        "public/src"        
+    ]
+}
