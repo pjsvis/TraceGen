@@ -3,8 +3,10 @@
 angular.module('app').factory('AppState', function ($localStorage) {
     var fac = {};
     fac.get = function () {
+        console.log('Hello');
     };
     fac.set = function (state) {
+        console.log('Not implemented')
     };
     return fac;
 });

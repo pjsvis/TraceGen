@@ -15,7 +15,7 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var path = require('path');
 var wiredep = require('wiredep').stream;
-var _ = require('underscore');
+var _ = require('lodash');
 
 // Use var to hold src path glob 
 var tsSrc = ['public/src/app.ts', 'public/src/**/*.ts'];

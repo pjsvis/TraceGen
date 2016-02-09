@@ -23,3 +23,4 @@
 /// <reference path="angular-toastr/angular-toastr.d.ts" />
 /// <reference path="angular-signalr-hub/angular-signalr-hub.d.ts" />
 /// <reference path="signalr/signalr.d.ts" />
+/// <reference path="lodash/lodash.d.ts" />
