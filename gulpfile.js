@@ -1,3 +1,4 @@
+﻿
 ﻿// Ref: https://gist.github.com/spboyer/96339ce687b0c79b8258
 var gulp = require('gulp');
 var mainBowerFiles = require('main-bower-files');
@@ -20,6 +21,7 @@ var config = {
         targetDir + '/**/*.js'
     ]
 }
+
 
 gulp.task('bower', function () {
   return $.bower();

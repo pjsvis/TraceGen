@@ -18,7 +18,7 @@
     "ng-file-upload": "^11.2.3",
     "ui-select": "angular-ui-select#^0.14.2",
     "angular-ya-treeview": "^0.2.2",
-    "ag-grid": "^1.15.0",
+    "ag-grid": "^3.3.0",
     "ngstorage": "ng-storage#^0.4.2",
     "ng-idle": "^1.1.1",
     "angular-translate": "^2.9.0",

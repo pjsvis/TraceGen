@@ -13,11 +13,15 @@
     <link rel="stylesheet" href="lib/angular-ya-treeview/dist/ya-treeview.min.css" />
     <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css" />
     <!-- endbower -->
+<<<<<<< HEAD
     <!-- Manually inject ag-grid as wiredep makes a mess of it -->
     <!--<link rel="stylesheet" href="src/ag-grid/ag-grid.min.css"></script>-->
+=======
+>>>>>>> parent of df2118a... Updated gulpfile.js
     <!-- inject:css -->
     <link rel="stylesheet" href="/dist/app.css">
     <!-- endinject -->
+
     <style>
         body {
             padding-top: 50px;
@@ -25,20 +29,26 @@
     </style>
 
     <!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js "></script>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 </head>
 
 <body>
-    <div class="container ">
-        <div class="row ">
-            <div class="col-md-12 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!--<h1>app has been scaffolded, yo!</h1>
+                <p class="lead">With layouts and styling by bootstrap</p>
+                <p>
+                    Plus sweet font-awesome icons
+                    <i class="fa fa-thumbs-o-up"></i>
+                </p>
+                <demo></demo>-->
                 <div ng-view></div>
             </div>
         </div>
     </div>
-    
     <!-- TODO: concat and minify this lot for production -->
     <!-- bower:js -->
     <script src="lib/jquery/dist/jquery.js"></script>
@@ -58,19 +68,16 @@
     <script src="lib/ng-file-upload/ng-file-upload.js"></script>
     <script src="lib/ui-select/dist/select.js"></script>
     <script src="lib/angular-ya-treeview/dist/ya-treeview-tpls.min.js"></script>
+    <script src="lib/ag-grid/dist/ag-grid.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/ng-idle/angular-idle.js"></script>
     <script src="lib/angular-translate/angular-translate.js"></script>
     <script src="lib/codemirror/lib/codemirror.js"></script>
     <script src="lib/angular-ui-codemirror/ui-codemirror.js"></script>
     <!-- endbower -->
-<!-- Not sure whay angular grid 1.15.0 only works if we inject it from our src folder -->
-<!--<script src="src/ag-grid/ag-grid.min.js"></script>-->
-<!--<script src="lib/ag-grid/dist/angular-grid.min.js"></script>-->
 
-
-    <!-- TODO: concat this lot for production -->
     <!-- inject:js -->
+<<<<<<< HEAD
     <script src="/src/browserCaps.js"></script>
     <script src="/src/Reports/ManagementReport.controller.js"></script>
     <script src="/src/Reports/Report.Service.js"></script>
@@ -98,8 +105,11 @@
     <script src="/src/services/DynamicSimService.js"></script>
     <script src="/src/services/download-xml.service.js"></script>
     <script src="/src/services/paginator.service.js"></script>
+=======
+    <script src="/src/services/AppState.js"></script>
+>>>>>>> parent of df2118a... Updated gulpfile.js
     <!-- endinject -->
-    <script src="/src/templates.js "></script>
+    <script src="/dist/appJs.js"></script>
 </body>
 
 </html>
