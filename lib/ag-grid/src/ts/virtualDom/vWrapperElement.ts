@@ -1,21 +1,26 @@
-import VElement from "./vElement";
-export default class VWrapperElement extends VElement {
+/// <reference path="vElement.ts" />
 
-    private wrappedElement: Element;
+module awk.vdom {
 
-    constructor(wrappedElement: Element) {
-        super();
-        this.wrappedElement = wrappedElement;
-    }
+    export class VWrapperElement extends VElement {
 
-    public toHtmlString(): string {
-        return '<span v_element_id="' + this.getId() + '"></span>';
-    }
+        private wrappedElement: Element;
 
-    public elementAttached(element: Element) {
-        var parent = element.parentNode;
-        parent.insertBefore(this.wrappedElement, element);
-        parent.removeChild(element);
+        constructor(wrappedElement: Element) {
+            super();
+            this.wrappedElement = wrappedElement;
+        }
+
+        public toHtmlString(): string {
+            return '<span v_element_id="' + this.getId() + '"></span>';
+        }
+
+        public elementAttached(element: Element) {
+            var parent = element.parentNode;
+            parent.insertBefore(this.wrappedElement, element);
+            parent.removeChild(element);
+        }
+
     }
 
 }

@@ -1,0 +1,35 @@
+﻿<!-- We put the IdleController down here after we have loaded our scripts -->
+<div ng-controller="IdleController">
+   <script type="text/ng-template" id="warning-dialog.html">
+      <div class="modal-header">
+         <h3>
+            The system idle time has been exceeded!
+         </h3>
+      </div>
+
+      <div idle-countdown="countdown" ng-init="countdown=100" class="modal-body">
+
+         You will be logged out in
+         <span ng-if="countdown >= 60">{{countdown / 60 | number:0}} minutes and {{countdown % 60 | number:0}} seconds.</span>
+         <span ng-if="countdown < 60">{{countdown | number:0}} seconds.</span>
+
+         <div ng-if="false">
+            <button class="btn btn-sm btn-warning" ng-click="logOutNow()">Logout Now</button>
+            <button class="btn btn-sm btn-success pull-right" ng-click="stayLoggedIn()">Stay logged in</button>
+         </div>
+
+      </div>
+   </script>
+
+   <script type="text/ng-template" id="timedout-dialog.html">
+      <div class="modal-header">
+         <h3>You've Timed Out!</h3>
+      </div>
+      <div class="modal-body">
+         <p>
+            You will be redirected to the login page.
+         </p>
+      </div>
+   </script>
+</div>
+

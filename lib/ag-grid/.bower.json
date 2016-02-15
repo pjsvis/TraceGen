@@ -1,44 +1,46 @@
 {
   "name": "ag-grid",
-  "version": "3.3.0",
-  "homepage": "http://www.ag-grid.com/",
+  "version": "1.16.1",
+  "homepage": "http://angulargrid.com/",
   "authors": [
-    "Niall Crosby <niall.crosby@gmail.com>"
+    "Niall Crosby <info@angulargrid.com>"
   ],
-  "description": "Advanced Javascript Datagrid. Supports raw Javascript, React, AngularJS 1.x, AngularJS 2.0 and Web Components",
+  "description": "High performance and feature rich data grid for AngularJS",
   "main": [
-    "./main.js"
+    "dist/angular-grid.js",
+    "dist/angular-grid.css",
+    "dist/theme-fresh.css",
+    "dist/theme-dark.css"
   ],
   "moduleType": [
     "node"
   ],
+  "typescript": {
+    "definitions": "dist/angular-grid.d.ts"
+  },
   "keywords": [
-    "web-components",
     "grid",
     "data",
     "table",
-    "react",
-    "reactjs",
-    "angular",
-    "angularjs"
+    "angular"
   ],
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
+    "bower_components",
     "test",
     "tests"
   ],
   "devDependencies": {},
   "dependencies": {},
-  "_release": "3.3.0",
+  "_release": "1.16.1",
   "_resolution": {
     "type": "version",
-    "tag": "3.3.0",
-    "commit": "4db970f65849d44b3fb205eaf2096c99997c1652"
+    "tag": "1.16.1",
+    "commit": "e1adfdbfec08e30e7851b6c5b0156f81ee36d85a"
   },
   "_source": "git://github.com/ceolter/angular-grid.git",
-  "_target": "^3.3.0",
-  "_originalSource": "ag-grid",
-  "_direct": true
+  "_target": "^1.15.0",
+  "_originalSource": "ag-grid"
 }

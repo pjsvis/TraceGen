@@ -1,0 +1,18 @@
+﻿<div class="modal-header">
+   <div class="text-muted pull-right">
+      <button class="btn btn-info btn-xs space-right" type="button" ng-click="vm.cancel()">Close</button>
+   </div>
+   <!--<div class="modal-title">
+      {{vm.media.AttachmentType}} {{vm.media.TraceUid}}
+   </div>-->
+   <div class="text-muted">{{vm.media.FileName}} uploaded by {{vm.media.UserName}} on {{vm.media.Timestamp | date: 'medium'}}</div>
+</div>
+<div class="modal-body">
+   <div>
+      <img ng-if="vm.media.ContentSubType == 'image'" width="100%" ng-src="data:{{vm.media.ContentType}};base64,{{vm.media.Content}}" />
+      <pre ng-if="vm.media.ContentSubType == 'text'">{{vm.media.Content}}</pre>
+   </div>
+</div>
+<div class="modal-footer">
+
+</div>

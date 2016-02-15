@@ -1,0 +1,284 @@
+﻿<div class="modal-header">
+    <span class="text-muted text-info h4">Trace Details</span>
+    <span class="pull-right pointer" ng-click="vm.cancel()" popover-placement="left" popover-trigger="mouseenter" uib-popover="Close Trace Details">
+        <i class="glyphicon glyphicon-remove"></i>
+        </span>
+</div>
+
+<div class="modal-body">
+
+    <div class="row space-top">
+
+        <div class="col-md-7">
+            
+            <!-- Move the details into the panel heading -->
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <!--<button class="btn btn-info btn-xs pull-right" ng-click="vm.back()">
+                        <i class="glyphicon glyphicon-chevron-left space-right"></i>Back
+                    </button>-->
+                    <div class="text-muted text-info text-mono">
+                        <div>Tester: {{vm.state.selectedTester.Name}} </div>
+                        <div>Simulator: {{vm.state.selectedSim.Name}}</div>
+                        <div>Suite: {{vm.state.selectedSuite.Name}}</div>
+                        <div>Test: {{vm.state.selectedTest.Name}}</div>
+                        <div ng-if="false"><pre>{{vm.state | json}}</pre></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Traces panel -->
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    
+                <!-- Paginate -->
+               <div class="pagination-sm space-left" 
+                    ng-if="vm.state.data.Rows.length > vm.state.itemsPerPage"
+                    style="margin-top: 0.04em;" uib-pagination ng-cloak                    
+                    boundary-links="true" total-items="vm.state.totalItems" 
+                    items-per-page="vm.state.itemsPerPage" max-size="1"
+                    ng-model="vm.state.currentPage" ng-change="vm.pageChanged()"
+                    previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;">
+               </div>
+                    
+                    
+                    <!-- Download XML -->
+                    <div class="pull-right">
+                        <span ng-if="vm.data.Rows.length > 0" ng-include="'scripts/app/templates/download-xml/download-xml.tpl.html'"></span>
+
+                        <button class="btn btn-info btn-sm" ng-click="vm.refreshTraces()">
+                            <i class="glyphicon glyphicon-refresh space-right"></i> Refresh
+                        </button>
+                    </div>
+                    <!-- TimeZone -->
+                    <div class="text-mono space-left">
+                        <span ng-if="vm.routeParams.shadowUserId === 0" popover-trigger="mouseenter" popover-placement="right" uib-popover="The Support role sees all trace timestamps as Greenwich Mean Time also known as Universal Time Coordinate (UTC) times.">
+                              {{vm.summaryDto.Timezone}}
+                           </span>
+                        <span ng-if="vm.routeParams.shadowUserId !== 0" popover-trigger="mouseenter" popover-placement="right" uib-popover="The trace timestamps are shown in the Tester's local time of {{vm.summaryDto.Timezone}}.">
+                              {{vm.summaryDto.Timezone}}
+                           </span>
+                    </div>
+                    
+                    <!-- Spinner -->
+                   <div class="text-center" ng-if="vm.state.showSpinner">
+                        <img src="images/spinner.gif" height="30" width="30" >
+                    </div>
+                    
+                    <!-- List of Messages and Verdicts  track by item.Id-->
+                    <div ng-class="{'repeated-item' : vm.autoRefresh}" ng-repeat="item in vm.data.Rows">
+                        <div ng-class="{'verdict': item.VerdictResult == 'verdict',
+                              'fail': item.VerdictResult == 'verdict-fail' || item.VerdictResult == 'verdict-fail-reasons',
+                              'pass' : item.VerdictResult == 'verdict-pass'}">
+                            <div ya-treeview ya-id="rows" ya-model="item.Rows" ya-options="vm.options" ya-context="vm.context">
+                                <span ng-class="{selected: context.selectedNodes.indexOf(node) > -1}">{{ node.$model.label }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--TODO: Get his working sticky offset-top="150" Maybe try ngScrollSpy from http://mg.github.io/ngScrollSpy/ -->
+        <div  >
+            <div class="col-md-5">
+
+                <!-- Warn if Receipt files are too large -->
+                <div class="alert alert-danger alert-dismissible" close="vm.tooLargeReceipts=[]" ng-if="vm.tooLargeReceipts.length > 0">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="h4 text-muted">Upload Receipt Size Limit Exceeded</div>
+                    <ol>
+                        <li ng-repeat="f in vm.tooLargeReceipts">
+                            {{f.name}} :: {{f.size /1024 /1024 | number : 0}} MB
+                        </li>
+                    </ol>
+                </div>
+                <!-- Upload Receipts: can be image or text and are shown in a popup-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <a ng-href="" class="pointer" ng-click="vm.showReceipts=!vm.showReceipts">
+                            <i class="glyphicon glyphicon-chevron-right chevron space-left" ng-hide="vm.showReceipts"></i>
+                            <i class="glyphicon glyphicon-chevron-down chevron space-left" ng-show="vm.showReceipts"></i>
+                               Receipts ({{vm.attachments.Receipts.length}})
+                        </a>
+                        <div class="pull-right" ng-form="receiptForm">
+                            <!-- BEGIN FILE UPLOAD -->
+                            <label>
+                                <!-- TODO: Add spinner to show progress -->
+                                <button class="btn btn-info btn-xs" ng-disabled="vm.summaryDto.Rows.length == 0" popover-trigger="mouseenter" uib-popover="You can upload files of up to 10MB in size."
+                                popover-animation popover-placement="bottom" ngf-select="vm.uploadReceipts($files)" multiple="multiple">
+                                    <i class="glyphicon glyphicon-upload space-right"></i>Upload
+                                </button>
+                            </label>
+                            <!-- END FILE UPLOAD -->
+                        </div>
+                        <div>
+                            <!--<div class="progress" ng-show="vm.receiptProgress != -1">
+                                <!--<div style="width:{{vm.receiptProgress}}%">{{receiptProgress}}%</div>
+                                <div class="progress-bar progress-bar-success progress-bar-striped active" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span class="sr-only">Uploading...</span>
+                                </div>
+                            </div>-->
+                            <div ng-hide="vm.errorMsg == null">
+                                <pre>{{vm.errorMsg | json}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" ng-show="vm.showReceipts">
+                        <div ng-repeat="d in vm.attachments.Receipts">
+                            <div class="list-group">
+                                <div class="list-item">
+
+                                    <!-- Give all files a download button -->
+                                    <div class="text-muted pull-right">
+                                        <a ng-href="" class="space-top pointer" ng-click="vm.downloadMedia(d)" uib-popover="Download  {{d.FileName}}" popover-animation
+                                        popover-trigger="mouseenter">
+                                       {{d.UserName}}
+                                       <span am-time-ago="d.Timestamp"></span>
+                                       <span ng-if="!vm.isToday(d.Timestamp)"> on {{d.Timestamp | date: 'ddMMMyy'}}</span>
+                                       <i height="40" width="40" class="glyphicon glyphicon-download space-left space-right"></i>
+                                    </a>
+                                    </div>
+                                    <!--Show images, text, and XML in modal-->
+                                    <div class="text-muted">
+                                        <a ng-href="" class="pointer" ng-if="d.ContentSubType != 'application'" ng-click="vm.showMedia(d)" uib-popover="View {{d.FileName}}"
+                                        popover-animation popover-trigger="mouseenter">
+                                            <i ng-if="d.ContentSubType === 'text'" height="40" width="40" class="glyphicon glyphicon-file space-left space-right"></i>
+                                            <i ng-if="d.ContentSubType === 'image'" height="40" width="40" class="glyphicon glyphicon-picture space-left space-right"></i>                                            {{d.FileName}}
+                                        </a>
+                                        <span ng-if="d.ContentSubType === 'application'"> {{d.FileName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warn if Log AKA Report uploads are too large -->
+                <div class="alert alert-danger alert-dismissible" close="vm.tooLargeLogs=[]" ng-if="vm.tooLargeLogs.length > 0">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="h4 text-muted">Upload Report Size Limit Exceeded</div>
+                    <ul>
+                        <li ng-repeat="f in vm.tooLargeLogs">
+                            {{f.name}} :: {{f.size /1024 /1024 | number : 0}} MB
+                        </li>
+                    </ul>
+                </div>
+                <!-- Logs AKA Reports can be images but are typically long text files and are shown in a popup -->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <a ng-href="" class="pointer" ng-click="vm.showLogs=!vm.showLogs">
+                            <i class="glyphicon glyphicon-chevron-right chevron space-left" ng-hide="vm.showLogs"></i>
+                            <i class="glyphicon glyphicon-chevron-down chevron space-left" ng-show="vm.showLogs"></i> Reports
+                            ({{vm.attachments.Logs.length}})
+                        </a>
+                        <div class="pull-right">
+                            <!-- BEGIN FILE UPLOAD -->
+                            <label>
+                                <button class="btn btn-info btn-xs" ng-disabled="vm.summaryDto.Rows.length == 0" popover-trigger="mouseenter" uib-popover="You can upload files of up to 10MB in size."
+                                popover-animation popover-placement="bottom" ngf-select="vm.uploadLogs($files)" multiple="multiple">
+                                    <i class="glyphicon glyphicon-upload space-right"></i>Upload
+                                </button>
+                            </label>
+                            <!-- END FILE UPLOAD -->
+                        </div>
+                        <div>
+                            <!--<div class="progress" ng-show="vm.logProgress != -1">
+                                @*
+                                <div style="width:{{vm.logProgress}}%">{{vm.logProgress}}%</div>*@
+                            </div>-->
+                            <div ng-hide="vm.errorMsg == null">
+                                <pre>{{vm.errorMsg | json}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" ng-show="vm.showLogs">
+                        <div ng-repeat="d in vm.attachments.Logs">
+                            <div class="list-group">
+                                <div class="list-item">
+
+                                    <!-- Give all files a download button -->
+                                    <div class="text-muted pull-right pointer">
+                                        <a ng-href="" class="space-top" ng-click="vm.downloadMedia(d)" uib-popover="Download  {{d.FileName}}" popover-animation popover-trigger="mouseenter">
+                                       {{d.UserName}}
+                                       <span am-time-ago="d.Timestamp"></span>
+                                       <span ng-if="!vm.isToday(d.Timestamp)"> on {{d.Timestamp | date: 'ddMMMyy'}}</span>
+                                       <i height="40" width="40" class="glyphicon glyphicon-download space-left space-right"></i>
+                                    </a>
+                                    </div>
+                                    <!--Show images and text in modal -->
+                                    <div class="text-muted">
+                                        <a ng-href="" class="pointer" ng-if="d.ContentSubType != 'application'" ng-click="vm.showMedia(d)" uib-popover="View {{d.FileName}}"
+                                        popover-animation popover-trigger="mouseenter">
+                                            <i ng-if="d.ContentSubType === 'text'" height="40" width="40" class="glyphicon glyphicon-file space-left space-right"></i>
+                                            <i ng-if="d.ContentSubType === 'image'" height="40" width="40" class="glyphicon glyphicon-picture space-left space-right"></i>                                            {{d.FileName}}
+                                        </a>
+                                        <span ng-if="d.ContentSubType === 'application'"> {{d.FileName}}</span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes are always type text and are shown inline -->
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <button type="button" class=" btn btn-info btn-xs pull-right" ng-disabled="vm.data.Rows.length == 0" ng-click="vm.showNoteTextArea()">
+                            <i class="glyphicon glyphicon-comment space-right"></i>Add
+                        </button>
+                        <a ng-href="" class="pointer" ng-click="vm.showNotes=!vm.showNotes">
+                            <i class="glyphicon glyphicon-chevron-right chevron space-left" ng-hide="vm.showNotes"></i>
+                            <i class="glyphicon glyphicon-chevron-down chevron space-left" ng-show="vm.showNotes"></i> Notes
+                            ({{vm.attachments.Notes.length}})
+                        </a>
+                    </div>
+                    <div class="list-group-item" ng-show="vm.showNote">
+                        <div>
+                            <textarea id="noteTextArea" class="styled" ng-model="vm.newNote" id="" cols="64" rows="16"></textarea>
+                        </div>
+                        <div>
+                            &nbsp;
+                            <button class="btn btn-default btn-xs pull-right space-left" ng-click="vm.showNote=false">Cancel</button>
+                            <button class="btn btn-info btn-xs pull-right space-right" ng-click="vm.saveNote(vm.newNote)">OK</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="list-group-item" ng-repeat="d in vm.attachments.Notes" ng-hide="vm.showNote || !vm.showNotes">
+                        <div class="text-muted pull-right" ng-if="!vm.isToday(d.Timestamp)">{{d.Timestamp | date: 'ddMMMyy'}} </div>
+                        <div class="text-muted">
+                            <i class="glyphicon glyphicon-comment text-info space-right"></i> {{d.UserName}}
+                            <span am-time-ago="d.Timestamp"></span>
+                        </div>
+                        <div class="text-warning">
+                            {{d.Content}}
+                        </div>
+                    </div>
+
+                    <div ng-if="vm.debug">
+                        <pre>vm.state: {{vm.state | json}}</pre>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="text-muted text-info pull-left space-left" ng-if="vm.data.Rows.length > 0">
+        {{vm.state.totalItems}} traces
+    </div>
+</div>

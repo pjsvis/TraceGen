@@ -1,0 +1,159 @@
+﻿
+<div class="container" ng-controller="UtpTraceSummaryController as vm" ng-cloak>
+
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         <span class="panel-title">
+            <i class="glyphicon glyphicon-random space-right"></i>
+            Trace Summary
+         </span>
+      </div>
+      <div class="panel-body">
+
+
+         <div class="row">
+            <div class="pull-right">
+
+               <!-- Search button -->
+               <button class="btn btn-sm btn-info" ng-click="vm.openSearch()">Search...</button>
+
+               <!-- Items per Page -->
+               <span class="text-mono" uib-dropdown>
+                  <button type="button" class="btn btn-sm btn-info" uib-dropdown-toggle>
+                     <span class="space-right">{{vm.state.itemsPerPage}} traces per page</span><span class="caret"></span>
+                  </button>
+                  <ul class="uib-dropdown-menu" role="menu">
+                     <li class="pointer" role="menuitem">
+                        <a ng-href="" ng-click="vm.changePageSize(5)">5</a>
+                     </li>
+                     <li class="pointer" role="menuitem">
+                        <a ng-href="" ng-click="vm.changePageSize(10)">10</a>
+                     </li>
+                     <li class="pointer" role="menuitem">
+                        <a ng-href="" ng-click="vm.changePageSize(25)">25</a>
+                     </li>
+                     <li class="pointer" role="menuitem">
+                        <a ng-href="" ng-click="vm.changePageSize(50)">50</a>
+                  </ul>
+               </span>
+
+               <!-- Download Trace XML-->
+               <span class="space-right" ng-if="true" ng-include="'scripts/app/templates/download-xml/download-xml.tpl.html'"></span>
+
+            </div>
+            <div class="text-muted text-info text-mono col-md-3" ng-cloak ng-if="vm.data.TotalItems > 0">
+
+               <div style="margin-left: -18px;">
+
+               </div>
+
+               <!-- Paginate -->
+               <div class="pagination-sm space-left" style="margin-top: 0.04em;" uib-pagination ng-cloak
+                    ng-if="vm.data.TotalItems > vm.state.itemsPerPage"
+                    boundary-links="true" total-items="vm.data.TotalItems"
+                    items-per-page="vm.state.itemsPerPage" max-size="1"
+                    ng-model="vm.state.currentPage" ng-change="vm.pageChanged()"
+                    previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;">
+               </div>
+               <div class="space-left" ng-show="vm.data.TotalItems > 0" ng-cloak>
+                  Page {{vm.state.currentPage}} of {{vm.data.LastPage}}
+                  ({{vm.data.TotalItems}} traces)                   
+               </div>
+
+               <div class="h4" ng-cloak ng-show="vm.data.TotalItems == 0">
+                  No traces available for {{vm.state.summaryTester.Name}}
+               </div>
+
+            </div>
+         </div>
+         <!-- End of row-->
+
+         <div class="row">
+            <div class="col-md-6">
+               <div class="text-muted text-info text-mono">
+                   <!-- Show search criteria -->
+                  <div class="space-left" ng-if="true || vm.state.isSearchResults">
+                     <span>{{vm.state.searchText}}</span>
+                  </div>
+                  <div>
+                      <!-- Show timestamp adjustment -->
+                     <span class="space-left">
+                        {{::vm.timestampText}}
+                     </span>
+                  </div>
+               </div>
+
+               <!-- List of Messages and Verdicts -->
+               <div style="min-height: 550px;">
+                  <div class="text-center" ng-show="vm.state.showSpinner">
+                     <img src="images/spinner.gif" height="30" width="30" alt="">
+                  </div>
+                  <div ng-class="{'repeated-item' : vm.state.autoRefresh}"
+                       ng-repeat="item in vm.data.Rows track by item.Id">
+                     <div ng-class="{'verdict': item.VerdictResult == 'verdict',
+                              'fail': item.VerdictResult == 'verdict-fail' || item.VerdictResult == 'verdict-fail-reasons',
+                              'pass' : item.VerdictResult == 'verdict-pass'}">
+                        <div ya-treeview ya-id="rows" ya-model="item.Rows" ya-options="vm.options" ya-context="vm.context">
+                           <span ng-class="{selected: context.selectedNodes.indexOf(node) > -1}">{{ node.$model.label }}</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- Selected Trace details -->
+            <div class="col-md-5" sticky offset-top="150">
+               <div class="panel panel-primary my-child">
+                  <div class="panel-heading">
+                     <span class="panel-title">Selected Trace Details</span>
+                  </div>
+                  <div class="panel-body" ng-class="{'text-muted': vm.state.selectedSim.Id == 0}">
+                     <div>
+                        <i class="glyphicon glyphicon-user space-right"></i> {{vm.state.selectedTester.Name}}
+                     </div>
+                     <div>
+                        <i class="glyphicon glyphicon-transfer space-right"></i>{{vm.state.selectedSim.Name}}
+                     </div>
+                     <div>
+                        <i class="glyphicon glyphicon-tags space-right"></i> {{vm.state.selectedSuite.Name}}
+                     </div>
+                     <div>
+                        <i class="glyphicon glyphicon-flash space-right"></i> {{vm.state.selectedTest.Name}}
+                     </div>
+
+                     <div class="btn-group text-mono space-top">
+
+                        <button class="btn btn-sm btn-default text-mono space-right"
+                                ng-class="{'btn-success' : vm.state.autoRefresh}"
+                                ng-click="vm.toggleAutoRefresh()">
+                           <i class="glyphicon glyphicon-refresh space-right"></i>
+                           Auto Refresh is <span ng-if="vm.state.autoRefresh">ON&nbsp;</span>
+                           <span ng-if="!vm.state.autoRefresh">OFF</span>
+                        </button>
+
+                        <!-- Details Button -->
+                        <button class="btn btn-default btn-sm text-mono space-left "
+                                ng-class="{'btn-info' : vm.state.selectedTraceUid.length > 0 && !vm.state.autoRefresh }"
+                                ng-click="vm.openDetails()">
+                           Details
+                           <i class="glyphicon glyphicon-chevron-right space-left"></i>
+                        </button>
+
+                     </div>
+                  </div>
+
+
+               </div>
+
+               <div class="col-md-3" ng-if="vm.state.debug">
+                  <pre class="space-top">{{vm.state | json}}</pre>
+               </div>
+            </div>
+
+         </div>
+
+      </div>
+   </div>
+
+</div><!-- End of controller scope -->

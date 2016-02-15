@@ -8,9 +8,6 @@
     .ag-cell
         padding: 2px;
 
-    .ag-column-moving .ag-cell
-        transition: left 0.2s;
-
     .ag-cell:focus
         //outline: none;
 
@@ -23,30 +20,16 @@
         border-left: 1px solid transparent;
         border-bottom: 1px solid transparent;
 
-    .ag-cell-first-right-pinned
-        border-left: 1px dotted grey;
-
-    .ag-header
+    .ag-pinned-header
         background: linear-gradient(white, lightgrey);
         border-bottom: 1px solid grey;
 
-    .ag-no-scrolls .ag-header-container
+    .ag-header-container
         background: linear-gradient(white, lightgrey);
         border-bottom: 1px solid grey;
 
     .ag-header-cell
         border-right: 1px solid grey;
-
-    .ag-header-cell-moving .ag-header-cell-label
-        opacity: 0.0;
-
-    .ag-header-cell-moving
-        background-color rgb(190,190,190);
-
-    .ag-header-cell-moving-clone
-        border-right: 1px solid grey;
-        border-left: 1px solid grey;
-        background-color:rgba(220, 220, 220, 0.8);
 
     .ag-header-group-cell
         border-right: 1px solid grey;
@@ -62,7 +45,7 @@
 
     .ag-header-group-cell-label
         padding: 4px;
-        padding-left: 10px;
+        font-weight: bold;
 
     .ag-header-group-text
         margin-right: 2px;
@@ -73,10 +56,6 @@
         border: 1px solid transparent;
         border-radius: 3px;
         box-sizing: content-box; /* When using bootstrap, box-sizing was set to 'border-box' */
-        line-height: 0px; /* normal line height, a space was appearing below the menu button */
-
-    .ag-pinned-right-header
-        border-left: 1px solid grey;
 
     .ag-header-cell-menu-button:hover
         border: 1px solid black;
@@ -102,16 +81,10 @@
         .ag-row
             background-color: #f0f0f0;
 
-    .ag-overlay-loading-wrapper
+    .ag-loading-panel
         background-color: rgba(255, 255, 255, 0.5);
 
-    .ag-overlay-loading-center
-        background-color: #ffffff;
-        border: 1px solid darkgray;
-        border-radius: 10px;
-        padding: 10px;
-
-    .ag-overlay-no-rows-center
+    .ag-loading-center
         background-color: #ffffff;
         border: 1px solid darkgray;
         border-radius: 10px;
@@ -119,6 +92,10 @@
 
     .ag-body
         background-color: #fafafa;
+
+    .ag-body-viewport {}
+
+    .ag-pinned-cols-viewport {}
 
     .ag-group-cell-entire-row
         background-color: #aaa;

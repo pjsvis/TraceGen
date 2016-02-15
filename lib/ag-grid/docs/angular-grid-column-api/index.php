@@ -16,7 +16,7 @@ include '../documentation_header.php';
         to build your own column management GUI (instead of what's provided in the tool panel).
     </p>
 
-    <pre><code>gridOptions.columnApi.hideColumn('country', true);</code></pre>
+    <pre><code>var pinning = gridOptions.columnApi.isPinning();</code></pre>
 
     <note>
         It is important to NEVER update the details of a column directly (I'm talking about a Column,
@@ -28,7 +28,7 @@ include '../documentation_header.php';
     <p>
         Below lists all the methods on the column API. At the bottom of this page there is an example.
         Note that when talking about columns, a Column Group refers to grouping of the columns in
-        the header, a Row Group refers to grouping of the data when doing aggregation and grouping
+        the header, a Column Pivot refers to grouping of the data when doing aggregation and grouping
         of rows.
     </p>
 
@@ -42,63 +42,31 @@ include '../documentation_header.php';
         (probably only useful to a select few of you).
     </p>
 
-    <p>
-        The grid API exposes functions that go beyond events and properties that
-        you application can call. The grid needs to be initialised before the API
-        can be accessed.
-    </p>
-
-    <h4>
-        <img src="/images/javascript.png" height="20"/>
-        <img src="/images/angularjs.png" height="20px"/>
-        Javascript and AngularJS 1.x
-    </h4>
-    <p>
-        Use columnApi placed inside gridOptions by the grid during initialisation.
-    </p>
-
-    <h4>
-        <img src="/images/react.png" height="20px"/>
-        React
-    </h4>
-    <p>
-        Use the column API passed to you via the onGridReady callback of the React component. You can also
-        use the columnApi placed inside gridOptions by the grid during initialisation.
-    </p>
-
-    <h4>
-        <img src="/images/angular2.png" height="20px"/>
-        AngularJS 2
-    </h4>
-    <p>
-        Use columnApi placed inside gridOptions by the grid during initialisation. You can also
-        use columnApi directly on the AngularJS 2 grid component.
-    </p>
-
-    <h4>
-        <img src="/images/webComponents.png" height="20px"/>
-        Web Components
-    </h4>
-    <p>
-        Use columnApi placed inside gridOptions by the grid during initialisation. You can also
-        use columnApi directly on the DOM element.
-    </p>
-
-    <h2>List of Column API Functions</h2>
-
     <table class="table">
         <tr>
             <th>Function</th>
             <th>Description</th>
         </tr>
         <tr>
-            <th>sizeColumnsToFit(width)</th>
-            <td>Don't use this! You are better off using gridApi.sizeColumnsToFit(), which first
-            works out the available with, and then calls this method. Only use this method if you
-            want to size to something other than the available width.</td>
+            <th>addChangeListener(listener)</th>
+            <td>Add a change listener to receive events of changes to the column state.</td>
         </tr>
         <tr>
-            <th>setColumnGroupOpened(group, newValue)</th>
+            <th>sizeColumnsToFit(width)</th>
+            <td>Get the columns to fit to a particular size. The gridApi.sizeColumnsToFit() uses
+            this method and passes in the grid width.</td>
+        </tr>
+        <tr>
+            <th>hideColumn(colId, hide)</th>
+            <td>To show / hide a specific column, where colId = the id of the
+                column you want to show / hide and hide = true to hide, false to show</td>
+        </tr>
+        <tr>
+            <th>hideColumns(colIds, hide)</th>
+            <td>To show / hide a list of columns.</td>
+        </tr>
+        <tr>
+            <th>columnGroupOpened(group, newValue)</th>
             <td>Call this if  you want to open or close a column group.</td>
         </tr>
         <tr>
@@ -121,24 +89,12 @@ include '../documentation_header.php';
             <td>Sets the state of the columns. See example below.</td>
         </tr>
         <tr>
-            <th>resetState()</th>
-            <td>Sets the state back to match the originally provided column definitions.</td>
-        </tr>
-        <tr>
             <th>getState()</th>
             <td>Gets the state of the columns. See example below.</td>
         </tr>
         <tr>
             <th>isPinning()</th>
-            <td>Returns true if pinning left or right, otherwise false.</td>
-        </tr>
-        <tr>
-            <th>isPinningLeft()</th>
-            <td>Returns true if pinning left, otherwise false.</td>
-        </tr>
-        <tr>
-            <th>isPinningRight()</th>
-            <td>Returns true if pinning right, otherwise false.</td>
+            <td>Returns true if pinning, otherwise false.</td>
         </tr>
         <tr>
             <th>getVisibleColAfter(col)</th>
@@ -151,43 +107,17 @@ include '../documentation_header.php';
             <td>Same as getVisibleColAfter except gives col to the left.</td>
         </tr>
         <tr>
-            <th>setColumnVisible(key, visible)</th>
-            <td>Sets the visibility of a column. Key can be the column id, field, ColDef object or Column object.</td>
-        </tr>
-        <tr>
-            <th>setColumnsVisible(key, visible)</th>
-            <td>Same as setColumnVisible, but provide a list of column keys.</td>
-        </tr>
-        <tr>
-            <th>setColumnPinned(key, pinned)</th>
-            <td>Sets the column pinned / unpinned. Key can be the column id, field, ColDef object or Column object.</td>
-        </tr>
-        <tr>
-            <th>setColumnsPinned(keys, pinned)</th>
-            <td>Same as setColumnPinned, but provide a list of column keys.</td>
-        </tr>
-        <tr>
-            <th>autoSizeColumn(key)</th>
-            <td>Auto-sizes a column based on it's contents.</td>
-        </tr>
-        <tr>
-            <th>autoSizeColumns(keys)</th>
-            <td>Same as autoSizeColumn, but provide a list of column keys.</td>
+            <th>setColumnVisible(column, visible)</th>
+            <td>Sets the visibility of a column.</td>
         </tr>
         <tr>
             <th>getAllColumns()</th>
             <td>Returns all the columns, regardless of visible or not.</td>
         </tr>
         <tr>
-            <th>getDisplayedCenterColumns(), getDisplayedLeftColumns(), getDisplayedRightColumns(), getAllDisplayedColumns()</th>
+            <th>getDisplayedColumns()</th>
             <td>Returns all columns currently displayed (eg are visible and if in a group, the group is showing
-                the columns) for the pinned left, center and pinned right portions of the grid.</td>
-        </tr>
-        <tr>
-            <th>getLeftDisplayedColumnGroups(), getCenterDisplayedColumnGroups(), getRightDisplayedColumnGroups(), getAllDisplayedColumnGroups()</th>
-            <td>Returns all 'root' column headers. If you are not grouping columns, these return the columns. If you are grouping,
-                these return the top level groups - you can navigate down through each one to get the other lower level
-                headers and finally the columns at the bottom.</td>
+            the columns).</td>
         </tr>
         <tr>
             <th>moveColumn(fromIndex, toIndex)</th>
@@ -196,31 +126,28 @@ include '../documentation_header.php';
                 of the column after the removal).</td>
         </tr>
         <tr>
-            <th>getRowGroupColumns()</th>
-            <td>Returns the row group columns.</td>
+            <th>getPivotedColumns()</th>
+            <td>Returns the pivoted columns. Pivoted columns are used for row grouping.</td>
         </tr>
         <tr>
-            <th>addRowGroupColumn(column)</th>
-            <td>Removes a row group column.</td>
+            <th>addPivotColumn(column)</th>
+            <td>Removes a pivoted column.</td>
         </tr>
         <tr>
-            <th>removeRowGroupColumn(column)</th>
-            <td>Removes a row group column.</td>
+            <th>removePivotColumn(column)</th>
+            <td>Removes a pivoted column.</td>
         </tr>
         <tr>
-            <th>moveRowGroupColumn(fromIndex, toIndex)</th>
-            <td>Moves a row group column.</td>
+            <th>movePivotColumn(fromIndex, toIndex)</th>
+            <td>Moves a pivot column.</td>
         </tr>
         <tr>
             <th>setColumnAggFunction(column, aggFunc)</th>
             <td>Sets the agg function for a column. Set to one of [min,max,sum].</td>
         </tr>
         <tr>
-            <th>setColumnWidth(column, newWidth, finished=true)</th>
-            <td>Sets the column width. The finished flag gets included in the resulting event and not used internally
-                by the grid. The finished flag is intended for dragging, where a dragging action will produce many
-                'columnWidth' events, so the consumer of events knows when it receives the last event in a stream.
-                The finished parameter is optional, it defaults to 'true'.</td>
+            <th>setColumnWidth(column, newWidth)</th>
+            <td>Sets the column width.</td>
         </tr>
         <tr>
             <th>addValueColumn(column)</th>
@@ -234,13 +161,45 @@ include '../documentation_header.php';
             <th>getValueColumns()</th>
             <td>Returns the value columns. Value columns are used for row aggregation.</td>
         </tr>
+        <tr>
+            <th>setPinnedColumnCount(count)</th>
+            <td>Sets the number of pinned columns.</td>
+        </tr>
+        <tr>
+            <th>getHeaderGroups()</th>
+            <td>Returns all the header groups.</td>
+        </tr>
     </table>
+
+    <h2>Column Changed Events</h2>
+
+    <p>
+        A column change event gets fired whenever something changes with one of the columns.
+        You add a column change event as follows:
+    </p>
+
+    <pre><code>gridOptions.columnApi.addChangeListener( function(event) {
+    console.log('Got column event: ' + event);
+});
+</code></pre>
+
+    Column change events have the following types:
+    <ul>
+        <li><b>everything</b>: Shotgun - gets called when new columns are set, so everything has changed.</li>
+        <li><b>columnResized</b>: A column was resized.</li>
+        <li><b>pivot</b>: A pivot column was added or removed.</li>
+        <li><b>value</b>: A value column was added or removed.</li>
+        <li><b>columnMoved</b>: A column was moved.</li>
+        <li><b>columnVisible</b>: A column was hidden / shown.</li>
+        <li><b>columnGroupOpened</b>: A column group was opened / closed.</li>
+        <li><b>pinnedCountChanged</b>: The number of pinned columns has changed.</li>
+    </ul>
 
     <h2>Deep Dive - Save / Restore Full State</h2>
 
     <p>
         It is also possible to store the entire state of the columns and restore them again via
-        the API. This includes visibility, width, row groups and values.
+        the API. This includes visibility, width, pivots and values.
     </p>
 
     <ul>
@@ -254,8 +213,8 @@ include '../documentation_header.php';
     </p>
 
 <pre>[
-{colId: "athlete", aggFunc: "sum",  hide: false, rowGroupIndex: 0,    width: 150, pinned: null},
-{colId: "age",     aggFunc: null,   hide: true,  rowGroupIndex: null, width: 90,  pinned: 'left'}
+{colId: "athlete", aggFunc: "sum",  hide: false, pivotIndex: 0,    width: 150},
+{colId: "age",     aggFunc: null,   hide: true,  pivotIndex: null, width: 90}
 ]
 </pre>
 
@@ -269,15 +228,14 @@ include '../documentation_header.php';
         The values have the following meaning:
     <ul>
         <li><b>colId</b>: The ID of the column. See
-            <a href="/angular-grid-column-definitions/index.php">column definitions</a> for explanation
+            <a href="angular-grid-column-definitions/index.php">column definitions</a> for explanation
             of column ID</li>
         <li><b>aggFunc</b>: If this columns is a value column, this field specifies the aggregation function.
         If the column is not a value column, this field is null.</li>
         <li><b>hide</b>: True if the column is hidden, otherwise false.</li>
-        <li><b>rowGroupIndex</b>: The index of the row group. If the column is not grouped, this field is null.
-        If multiple columns are used to group, this index provides the order of the grouping.</li>
+        <li><b>pivotIndex</b>: The index of the pivot. If the column is not pivoted, this field is null.
+        If multiple columns are used to pivot, this index provides the order of the pivot.</li>
         <li><b>width</b>: The width of the column. If the column was resized, this reflects the new value.</li>
-        <li><b>pinned</b>: The pinned state of the column. Can be either 'left' or 'right'</li>
     </ul>
     </p>
 

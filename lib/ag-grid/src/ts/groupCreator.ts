@@ -1,112 +1,100 @@
-import ValueService from "./valueService";
-import GridOptionsWrapper from "./gridOptionsWrapper";
-import {RowNode} from "./entities/rowNode";
-import Column from "./entities/column";
-export default class GroupCreator {
+module awk.grid {
 
-    private valueService: ValueService;
-    private gridOptionsWrapper: GridOptionsWrapper;
+    export class GroupCreator {
 
-    public init(valueService: ValueService, gridOptionsWrapper: GridOptionsWrapper) {
-        this.valueService = valueService;
-        this.gridOptionsWrapper = gridOptionsWrapper;
-    }
+        private valueService: ValueService;
 
-    public group(rowNodes: RowNode[], groupedCols: Column[], expandByDefault: number) {
+        public init(valueService: ValueService) {
+            this.valueService = valueService;
+        }
 
-        var topMostGroup: RowNode = {
-            level: -1,
-            children: [],
-            _childrenMap: {}
-        };
+        public group(rowNodes: RowNode[], groupedCols: Column[], expandByDefault: any) {
 
-        var allGroups: RowNode[] = [];
-        allGroups.push(topMostGroup);
+            var topMostGroup: RowNode = {
+                level: -1,
+                children: [],
+                _childrenMap: {}
+            };
 
-        var levelToInsertChild = groupedCols.length - 1;
-        var i: number;
-        var currentLevel: number;
-        var node: RowNode;
-        var data: any;
-        var currentGroup: any;
-        var groupKey: string;
-        var nextGroup: RowNode;
-        var includeParents = !this.gridOptionsWrapper.isSuppressParentsInRowNodes();
+            var allGroups: RowNode[] = [];
+            allGroups.push(topMostGroup);
 
-        // start at -1 and go backwards, as all the positive indexes
-        // are already used by the nodes.
-        var index = -1;
+            var levelToInsertChild = groupedCols.length - 1;
+            var i: number;
+            var currentLevel: number;
+            var node: RowNode;
+            var data: any;
+            var currentGroup: any;
+            var groupKey: string;
+            var nextGroup: RowNode;
 
-        for (i = 0; i < rowNodes.length; i++) {
-            node = rowNodes[i];
-            data = node.data;
+            // start at -1 and go backwards, as all the positive indexes
+            // are already used by the nodes.
+            var index = -1;
 
-            // all leaf nodes have the same level in this grouping, which is one level after the last group
-            node.level = levelToInsertChild + 1;
+            for (i = 0; i < rowNodes.length; i++) {
+                node = rowNodes[i];
+                data = node.data;
 
-            for (currentLevel = 0; currentLevel < groupedCols.length; currentLevel++) {
-                var groupColumn = groupedCols[currentLevel];
-                groupKey = this.valueService.getValue(groupColumn.getColDef(), data, node);
+                // all leaf nodes have the same level in this grouping, which is one level after the last group
+                node.level = levelToInsertChild + 1;
 
-                if (currentLevel === 0) {
-                    currentGroup = topMostGroup;
-                }
+                for (currentLevel = 0; currentLevel < groupedCols.length; currentLevel++) {
+                    var groupColumn = groupedCols[currentLevel];
+                    groupKey = this.valueService.getValue(groupColumn.colDef, data, node);
 
-                // if group doesn't exist yet, create it
-                nextGroup = currentGroup._childrenMap[groupKey];
-                if (!nextGroup) {
-                    nextGroup = {
-                        group: true,
-                        field: groupColumn.getColDef().field,
-                        id: index--,
-                        key: groupKey,
-                        expanded: this.isExpanded(expandByDefault, currentLevel),
-                        children: [],
-                        // for top most level, parent is null
-                        parent: null,
-                        allChildrenCount: 0,
-                        level: currentGroup.level + 1,
-                        _childrenMap: {} //this is a temporary map, we remove at the end of this method
-                    };
-                    if (includeParents) {
-                        nextGroup.parent = currentGroup === topMostGroup ? null : currentGroup;
+                    if (currentLevel === 0) {
+                        currentGroup = topMostGroup;
                     }
-                    currentGroup._childrenMap[groupKey] = nextGroup;
-                    currentGroup.children.push(nextGroup);
-                    allGroups.push(nextGroup);
-                }
 
-                nextGroup.allChildrenCount++;
+                    // if group doesn't exist yet, create it
+                    nextGroup = currentGroup._childrenMap[groupKey];
+                    if (!nextGroup) {
+                        nextGroup = {
+                            group: true,
+                            field: groupColumn.colId,
+                            id: index--,
+                            key: groupKey,
+                            expanded: this.isExpanded(expandByDefault, currentLevel),
+                            children: [],
+                            // for top most level, parent is null
+                            parent: currentGroup === topMostGroup ? null : currentGroup,
+                            allChildrenCount: 0,
+                            level: currentGroup.level + 1,
+                            _childrenMap: {} //this is a temporary map, we remove at the end of this method
+                        };
+                        currentGroup._childrenMap[groupKey] = nextGroup;
+                        currentGroup.children.push(nextGroup);
+                        allGroups.push(nextGroup);
+                    }
 
-                if (currentLevel == levelToInsertChild) {
-                    if (includeParents) {
+                    nextGroup.allChildrenCount++;
+
+                    if (currentLevel == levelToInsertChild) {
                         node.parent = nextGroup === topMostGroup ? null : nextGroup;
+                        nextGroup.children.push(node);
+                    } else {
+                        currentGroup = nextGroup;
                     }
-                    nextGroup.children.push(node);
-                } else {
-                    currentGroup = nextGroup;
                 }
+
+            }
+``
+            //remove the temporary map
+            for (i = 0; i < allGroups.length; i++) {
+                delete allGroups[i]._childrenMap;
             }
 
+            return topMostGroup.children;
         }
 
-        //remove the temporary map
-        for (i = 0; i < allGroups.length; i++) {
-            delete allGroups[i]._childrenMap;
-        }
-
-        return topMostGroup.children;
-    }
-
-    isExpanded(expandByDefault: any, level: any) {
-        if (typeof expandByDefault === 'number') {
-            if (expandByDefault===-1) {
-                return true;
-            } else {
+        isExpanded(expandByDefault: any, level: any) {
+            if (typeof expandByDefault === 'number') {
                 return level < expandByDefault;
+            } else {
+                return expandByDefault === true || expandByDefault === 'true';
             }
-        } else {
-            return false;
         }
     }
 }
+

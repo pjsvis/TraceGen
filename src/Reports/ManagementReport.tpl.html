@@ -1,0 +1,21 @@
+﻿<div  ng-class="{'container': vm.state.narrower}"  ng-controller="ManagementReportController as vm" ng-cloak>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">            
+            <button class="btn btn-info btn-xs pull-right space-left " ng-click="vm.toggleToolPanel()">Tool Panel</button>
+            <button class="btn btn-info btn-xs pull-right space-left" ng-click="vm.toggleWidth()">
+                <span ng-if="vm.state.narrower">Wider</span>
+                <span ng-if="!vm.state.narrower">Narrower</span>
+             </button>
+              <button class="btn btn-info btn-xs pull-right space-left " ng-click="vm.exportCsv()">Export CSV</button>
+            <span class="panel-title">Management Report</span>
+        </div>
+        <div class="panel-body">       
+            <div ng-include="'scripts/app/partials/reports/ReportMenu.tpl.html'"></div>
+            <div class="table">
+                <div ag-grid="vm.gridOptions" class="ag-fresh" style="width: 100%; height: 600px;"></div>
+            </div>
+        </div>
+    </div>
+    
+</div>

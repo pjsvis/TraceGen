@@ -53,6 +53,7 @@ angular.module('app')
          if (response.status === 404) {
             msg = ['Could not find ', response.config.url].join('');
             toastr.error(msg);
+            console.log(response.config.url);
             return;
          }
 
@@ -78,6 +79,7 @@ angular.module('app')
          // timeout: 10000
                  
       };
+      var baseUrl = 'http://localhost:55693/OTS.UTP/';
       var fac = {
          get: function(url: string): ng.IPromise<any> {
 
@@ -97,7 +99,8 @@ angular.module('app')
             });
          },
          jsonp: function(url: string): ng.IPromise<any> {
-            return $http.jsonp(url + '?callback=JSON_CALLBACK', config).then(function(response: ng.IHttpPromise<any>) {
+             var api=baseUrl + url; //+ '?callback=JSON_CALLBACK';
+            return $http.jsonp(api, config).then(function(response: ng.IHttpPromise<any>) {
                return response;
             }, function(response) {
                showError(response);

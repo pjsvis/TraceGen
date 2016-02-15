@@ -1,182 +1,103 @@
-import {ColumnGroupChild} from "./columnGroupChild";
-import {ColGroupDef} from "./colDef";
-import Column from "./column";
-import {AbstractColDef} from "./colDef";
-import {OriginalColumnGroup} from "./originalColumnGroup";
+module awk.grid {
 
-export default class ColumnGroup implements ColumnGroupChild {
+    export class ColumnGroup {
 
-    public static HEADER_GROUP_SHOW_OPEN = 'open';
-    public static HEADER_GROUP_SHOW_CLOSED = 'closed';
+        pinned: any;
+        name: any;
+        allColumns: Column[] = [];
+        displayedColumns: Column[] = [];
+        expandable = false;
+        expanded = false;
+        actualWidth: number;
 
-    // all the children of this group, regardless of whether they are opened or closed
-    private children: ColumnGroupChild[];
-    // depends on the open/closed state of the group, only displaying columns are stored here
-    private displayedChildren: ColumnGroupChild[] = [];
-
-    private groupId: string;
-    private instanceId: number;
-    private originalColumnGroup: OriginalColumnGroup;
-
-    constructor(originalColumnGroup: OriginalColumnGroup, groupId: string, instanceId: number) {
-        this.groupId = groupId;
-        this.instanceId = instanceId;
-        this.originalColumnGroup = originalColumnGroup;
-    }
-
-    // returns header name if it exists, otherwise null. if will not exist if
-    // this group is a padding group, as they don't have colGroupDef's
-    public getHeaderName(): string {
-        if (this.originalColumnGroup.getColGroupDef()) {
-            return this.originalColumnGroup.getColGroupDef().headerName;
-        } else {
-            return null;
+        constructor(pinned: any, name: any) {
+            this.pinned = pinned;
+            this.name = name;
         }
-    }
 
-    public getGroupId(): string {
-        return this.groupId;
-    }
+        public getMinimumWidth(): number {
+            var result = 0;
+            this.displayedColumns.forEach( (column: Column) => {
+                result += column.getMinimumWidth();
+            });
+            return result;
+        }
 
-    public getInstanceId(): number {
-        return this.instanceId;
-    }
+        public addColumn(column: any) {
+            this.allColumns.push(column);
+        }
 
-    public isChildInThisGroupDeepSearch(wantedChild: ColumnGroupChild): boolean {
-        var result = false;
-
-        this.children.forEach( (foundChild: ColumnGroupChild) => {
-            if (wantedChild === foundChild) {
-                result = true;
-            }
-            if (foundChild instanceof ColumnGroup) {
-                if ((<ColumnGroup>foundChild).isChildInThisGroupDeepSearch(wantedChild)) {
-                    result = true;
+        // need to check that this group has at least one col showing when both expanded and contracted.
+        // if not, then we don't allow expanding and contracting on this group
+        public calculateExpandable() {
+            // want to make sure the group doesn't disappear when it's open
+            var atLeastOneShowingWhenOpen = false;
+            // want to make sure the group doesn't disappear when it's closed
+            var atLeastOneShowingWhenClosed = false;
+            // want to make sure the group has something to show / hide
+            var atLeastOneChangeable = false;
+            for (var i = 0, j = this.allColumns.length; i < j; i++) {
+                var column = this.allColumns[i];
+                if (column.colDef.headerGroupShow === 'open') {
+                    atLeastOneShowingWhenOpen = true;
+                    atLeastOneChangeable = true;
+                } else if (column.colDef.headerGroupShow === 'closed') {
+                    atLeastOneShowingWhenClosed = true;
+                    atLeastOneChangeable = true;
+                } else {
+                    atLeastOneShowingWhenOpen = true;
+                    atLeastOneShowingWhenClosed = true;
                 }
             }
-        });
 
-        return result;
-    }
+            this.expandable = atLeastOneShowingWhenOpen && atLeastOneShowingWhenClosed && atLeastOneChangeable;
+        }
 
-    public getActualWidth(): number {
-        var groupActualWidth = 0;
-        if (this.displayedChildren) {
-            this.displayedChildren.forEach( (child: ColumnGroupChild)=> {
-                groupActualWidth += child.getActualWidth();
+        public calculateActualWidth(): void {
+            var actualWidth = 0;
+            this.displayedColumns.forEach( (column: Column)=> {
+                actualWidth += column.actualWidth;
             });
+            this.actualWidth = actualWidth;
         }
-        return groupActualWidth;
-    }
 
-    public getMinWidth(): number {
-        var result = 0;
-        this.displayedChildren.forEach( (groupChild: ColumnGroupChild) => {
-            result += groupChild.getMinWidth();
-        });
-        return result;
-    }
-
-    public addChild(child: ColumnGroupChild): void {
-        if (!this.children) {
-            this.children = [];
-        }
-        this.children.push(child);
-    }
-
-    public getDisplayedChildren(): ColumnGroupChild[] {
-        return this.displayedChildren;
-    }
-
-    public getLeafColumns(): Column[] {
-        var result: Column[] = [];
-        this.addLeafColumns(result);
-        return result;
-    }
-
-    public getDisplayedLeafColumns(): Column[] {
-        var result: Column[] = [];
-        this.addDisplayedLeafColumns(result);
-        return result;
-    }
-
-    // why two methods here doing the same thing?
-    public getDefinition(): AbstractColDef {
-        return this.originalColumnGroup.getColGroupDef();
-    }
-    public getColGroupDef(): ColGroupDef {
-        return this.originalColumnGroup.getColGroupDef();
-    }
-
-    public isExpandable(): boolean {
-        return this.originalColumnGroup.isExpandable();
-    }
-
-    public isExpanded(): boolean {
-        return this.originalColumnGroup.isExpanded();
-    }
-
-    public setExpanded(expanded: boolean): void {
-        this.originalColumnGroup.setExpanded(expanded);
-    }
-
-    private addDisplayedLeafColumns(leafColumns: Column[]): void {
-        this.displayedChildren.forEach( (child: ColumnGroupChild) => {
-            if (child instanceof Column) {
-                leafColumns.push(<Column>child);
-            } else if (child instanceof ColumnGroup) {
-                (<ColumnGroup>child).addDisplayedLeafColumns(leafColumns);
+        public calculateDisplayedColumns() {
+            // clear out last time we calculated
+            this.displayedColumns = [];
+            // it not expandable, everything is visible
+            if (!this.expandable) {
+                this.displayedColumns = this.allColumns;
+                return;
             }
-        });
-    }
-
-    private addLeafColumns(leafColumns: Column[]): void {
-        this.children.forEach( (child: ColumnGroupChild) => {
-            if (child instanceof Column) {
-                leafColumns.push(<Column>child);
-            } else if (child instanceof ColumnGroup) {
-                (<ColumnGroup>child).addLeafColumns(leafColumns);
+            // and calculate again
+            for (var i = 0, j = this.allColumns.length; i < j; i++) {
+                var column = this.allColumns[i];
+                switch (column.colDef.headerGroupShow) {
+                    case 'open':
+                        // when set to open, only show col if group is open
+                        if (this.expanded) {
+                            this.displayedColumns.push(column);
+                        }
+                        break;
+                    case 'closed':
+                        // when set to open, only show col if group is open
+                        if (!this.expanded) {
+                            this.displayedColumns.push(column);
+                        }
+                        break;
+                    default:
+                        // default is always show the column
+                        this.displayedColumns.push(column);
+                        break;
+                }
             }
-        });
-    }
-
-    public getChildren(): ColumnGroupChild[] {
-        return this.children;
-    }
-
-    public getColumnGroupShow(): string {
-        return this.originalColumnGroup.getColumnGroupShow();
-    }
-
-    public calculateDisplayedColumns() {
-        // clear out last time we calculated
-        this.displayedChildren = [];
-        // it not expandable, everything is visible
-        if (!this.originalColumnGroup.isExpandable()) {
-            this.displayedChildren = this.children;
-            return;
         }
-        // and calculate again
-        for (var i = 0, j = this.children.length; i < j; i++) {
-            var abstractColumn = this.children[i];
-            var headerGroupShow = abstractColumn.getColumnGroupShow();
-            switch (headerGroupShow) {
-                case ColumnGroup.HEADER_GROUP_SHOW_OPEN:
-                    // when set to open, only show col if group is open
-                    if (this.originalColumnGroup.isExpanded()) {
-                        this.displayedChildren.push(abstractColumn);
-                    }
-                    break;
-                case ColumnGroup.HEADER_GROUP_SHOW_CLOSED:
-                    // when set to open, only show col if group is open
-                    if (!this.originalColumnGroup.isExpanded()) {
-                        this.displayedChildren.push(abstractColumn);
-                    }
-                    break;
-                default:
-                    // default is always show the column
-                    this.displayedChildren.push(abstractColumn);
-                    break;
+
+        // should replace with utils method 'add all'
+        public addToVisibleColumns(colsToAdd: any) {
+            for (var i = 0; i < this.displayedColumns.length; i++) {
+                var column = this.displayedColumns[i];
+                colsToAdd.push(column);
             }
         }
     }

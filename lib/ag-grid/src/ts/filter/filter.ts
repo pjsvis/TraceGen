@@ -1,11 +1,15 @@
-export interface Filter {
+module awk {
 
-     // mandatory methods
-    getGui(): any;
-    isFilterActive(): boolean;
-    doesFilterPass(params: any): boolean;
+    export interface Filter {
 
-    // optional methods
-    afterGuiAttached?(params?: {hidePopup?: Function}): void;
-    onNewRowsLoaded?(): void;
+         // mandatory methods
+        getGui(): any;
+        isFilterActive(): boolean;
+        doesFilterPass(params: any): boolean;
+
+        // optional methods
+        afterGuiAttached?(params?: {hidePopup?: Function}): void;
+        onNewRowsLoaded?(): void;
+    }
+
 }

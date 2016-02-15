@@ -14,10 +14,9 @@
 //    getUserDetails: ng.IHttpPromise<IUserDetails>;
 // }
 // 
-angular.module('app').factory('UserDetailsService', function($http) {
-   var baseHref = 'http://localhost:55693/OTS.UTP/';
-   return {
-      getUserDetails: () => $http.jsonp(baseHref + 'api/User/Details')
+angular.module('app').factory('UserDetailsService', function($http, HttpHelper) {
+   return {      
+      getUserDetails: ()=> HttpHelper.jsonp('api/User/Details')
    };
 });
 
@@ -27,19 +26,16 @@ angular.module('app').controller('WebApiController', function($window, UserDetai
     vm.data={}
     $window.vm = vm;
     var userDetails = {
-        UserName: "Peter",
-        Description: "Good guy",
-        IsAdmin: false,
-        IsSupport: true
+        UserName: "Not yet queried",
     }
     vm.state.userDetails = userDetails;
     console.log('Hello UTP');
-    vm.data.todo = 'Fix up the jsonp ressponse';
-    UserDetailsService.getUserDetails().then(response => {
-        console.log('Back from userDetails with...');
-        console.log(response);
-      var userDetails = response.data;
-      this.userDetails = userDetails;
-    });
+    vm.data.todo = 'Fix up the jsonp response';
+    // UserDetailsService.getUserDetails().then(response => {
+    //     console.log('Back from userDetails with...');
+    //     console.log(response);
+    //   var userDetails = response.data;
+    //   this.userDetails = userDetails;
+    // });
     
 });

@@ -4,8 +4,8 @@ angular.module('app').factory('UserDetails', function($http: ng.IHttpService) {
    
    get: function() {
        return $http({
-           method: 'GET',
-           url: 'api/user/details',
+           method: 'jsonp',
+           url: 'api/user/details'+ '?callback=JSON_CALLBACK',
            cache: true
        }).then(response => response.data);
    }

@@ -1,0 +1,162 @@
+﻿<div class="container" ng-cloak ng-controller="TesterController as vm">
+
+    <div class="row space-bottom">
+        <div class="col-md-12">
+            <div class="row space-bottom" style="font-size:105%;">
+                <div class="col-md-12 text-bold">Welcome to the Tester Home Page. Follow the simple 1,2,3 process below.</div>
+            </div>
+            <div class="row text-smaller text-info">
+                <div class="col-md-4"><span class="number-circle">1</span> Click on a Simulator to populate the related Test Suites.</div>
+                <div class="col-md-4"><span class="number-circle">2</span> Click on a Test Suite to populate the related Test Cases.</div>
+                <div class="col-md-4"><span class="number-circle">3</span> Select the Test Case you want to run by clicking the icon
+                    <button class="btn btn-xs btn-info space-left text-smaller"><i class="glyphicon glyphicon-flash"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title" ng-if="vm.state.userDetails.IsTester">Test Suites</div>
+            <div ng-if="vm.state.userDetails.IsSupport">
+                <button class="btn btn-info btn-sm pull-right" ng-click="vm.back()">
+                    <i class="glyphicon glyphicon-chevron-left space-right"></i> Back
+                </button>
+                Supporting Tester: {{vm.state.selectedTester.Name}}
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="panel-title">
+                        <i class="glyphicon glyphicon-transfer space-right"></i>
+                        Simulators
+                     </span>
+                            <div class="input-group space-top">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+                                <input type="text" class="form-control input-sm" ng-model="simFilter.Name" placeholder="Contains...">
+                            </div>
+                        </div>
+                        <div class="panel-body fixed-panel-tester">
+                            <div class="list-group">
+                                <a href="" class="list-group-item" ng-if="vm.data.Sims.length == 0">
+                                    <span class="text-muted">No simulators have been assigned for this user</span>
+                                </a>
+
+                                <a class="list-group-item pointer" ng-href="" ng-click="vm.gotoTraceSummary()">
+                                    <i class="glyphicon glyphicon-random space-right"></i> Trace Summary for all Simulators
+                                </a>
+
+                                <a ng-href="" class="list-group-item pointer" ng-repeat="sim in vm.data.Sims | filter: simFilter" ng-click="vm.selectSim(sim)"
+                                ng-class="{'active' : sim == vm.state.selectedSim}">
+                           {{sim.Name}}
+                        </a>
+                            </div>
+                        </div>
+                        <div id="divUsrPwd" class="panel-footer">
+                            <a href="ChangePassword" class="">
+                                <i class="glyphicon glyphicon-lock space-right"></i> Change password
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="panel-title">
+                        <i class="glyphicon glyphicon-tags space-right"></i>
+                        Test Suites
+                     </span>
+                            <div class="input-group space-top">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+                                <input type="text" class="form-control input-sm" ng-model="suiteFilter.Name" placeholder="Contains...">
+                            </div>
+
+                        </div>
+                        <div class="panel-body fixed-panel-tester">
+                            <ul class="list-group">
+                                <a href="" class="list-group-item" ng-if="vm.data.TestSuites.length == 0">
+                                    <span class="text-muted">No test suites have been assigned for this simulator.</span>
+                                </a>
+
+                                <a href="" class="list-group-item" ng-repeat="suite in vm.data.TestSuites | filter: suiteFilter" ng-click="vm.selectSuite(suite)"
+                                ng-class="{'active' : suite == vm.state.selectedSuite}">
+                           {{suite.Name}}
+                        </a>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-right space-bottom">
+                            </div>
+
+                            <button class="btn btn-info btn-xs pull-right" ng-click="vm.updateTestResults()">
+                                <i class="glyphicon glyphicon-refresh space-right"></i> Refresh
+                            </button>
+                            <div>
+                                <span class="panel-title">
+                           <i class="glyphicon glyphicon-flash space-right"></i>Test Cases ({{vm.data.TestCaseResults.length}})
+                        </span>
+                            </div>
+
+                            <div class="input-group space-top">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+                                <input type="text" class="form-control input-sm" ng-model="testFilter.TestCaseName" placeholder="Contains...">
+                            </div>
+
+                        </div>
+
+                        <div class="panel-body fixed-panel-tester">
+                            <ul class="list-group">
+                                <a href="" class="list-group-item" ng-if="vm.data.TestCaseResults.length == 0">
+                                    <span class="text-muted">No test cases have been assigned for this test suite.</span>
+                                </a>
+
+                                <li class="list-group-item" ng-repeat="case in vm.data.TestCaseResults | filter: testFilter">
+                                    <!-- Action buttons for view test -->
+                                    <div class="pull-right" ng-if="!case.NoRecords">
+                                        <button class="btn btn-xs btn-info space-left" ng-click="vm.openDetails(case)" popover-placement="left" uib-popover="Trace details"
+                                        popover-trigger="mouseenter">
+                                            <i class="glyphicon glyphicon-random"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Test Result Status glyphs -->
+                                    <!-- Test in progress -->
+                                    <i class="glyphicon glyphicon-refresh text-warning space-right" ng-if="case.Status == 'in-progress'" uib-popover="Test case in progress"
+                                    popover-trigger="mouseenter" popover-placement="right"></i>
+                                    <!-- Test passed -->
+                                    <i class="glyphicon glyphicon-ok text-success space-right" ng-if="case.Status == 'pass'" uib-popover="Test case succeeded"
+                                    popover-trigger="mouseenter" popover-placement="right"></i>
+                                    <!-- Test failed -->
+                                    <i class="glyphicon glyphicon-remove text-danger space-right" ng-if="caase.Status == 'fail'" uib-popover="Test case failed"
+                                    popover-trigger="mouseenter" popover-placement="right"></i>
+                                    <!-- Action buttons for run test -->
+                                    <button class="btn btn-xs btn-info space-right" ng-if="vm.state.userDetails.IsTester" ng-click="vm.runTest(case)" uib-popover="Run test"
+                                    popover-trigger="mouseenter" popover-placement="right">
+                                        <i class="glyphicon glyphicon-flash"></i>
+                                    </button>
+                                    {{case.Name}} <span ng-if="vm.state.debug">({{case.Id}})</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

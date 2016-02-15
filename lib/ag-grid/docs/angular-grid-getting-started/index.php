@@ -1,231 +1,127 @@
 <?php
 $key = "Getting Started";
-$pageTitle = "Getting Started";
-$pageDescription = "Getting Started Angular JS 1";
-$pageKeyboards = "Getting Started Angular JS 1";
+$pageTitle = "Angular Compiling";
+$pageDescription = "Angular Grid Angular Compiling";
+$pageKeyboards = "Angular Grid Angular Compiling";
 include '../documentation_header.php';
 ?>
 
 <div>
 
-    <h2>Download & Install</h2>
+    <h2>Getting Started</h2>
 
-    <table>
-        <tr>
-            <td style="padding: 10px;"><img src="../images/bower.png"/></td>
-            <td>
-                <b>Bower</b><br/>
-                bower install ag-grid
-            </td>
-
-            <td style="width: 20px;"/>
-
-            <td style="padding: 10px;"><img src="../images/npm.png"/></td>
-            <td>
-                <b>NPM</b><br/>
-                npm install ag-grid
-            </td>
-
-            <td style="width: 20px;"/>
-
-            <td style="padding: 10px;"><img src="../images/github.png"/></td>
-            <td>
-                <b>Github</b><br/>
-                Download from <a href="https://github.com/ceolter/ag-grid">Github</a>
-            </td>
-        </tr>
-    </table>
-
-    <h3>Referencing ag-Grid Files</h3>
+    <h3>Dependencies</h3>
 
     <p>
-        ag-Grid is distributed as both a self contained bundle (that places ag-Grid on the global scope)
-        and also via a CommonJS package.
+        In your html include Angular Grid's resources as follows:
     </p>
 
-    <h4>Self Contained Bundle</h4>
-
-    <p>Using the bundled version is the quickest way to get going, you just put the reference into your
-        HTML page and it works.</p>
-
-        <pre>&lt;script src="pathToGrid/ag-grid.js">&lt;/script></pre>
+        <pre>&lt;script src="../dist/angular-grid.js">&lt;/script>
+&lt;link rel="stylesheet" type="text/css" href="../dist/angular-grid.css">
+&lt;link rel="stylesheet" type="text/css" href="../dist/theme-fresh.css"></pre>
 
     <p>
-        There are two bundle files in the distribution:
-        <ul>
-        <li>dist/ag-grid.js -> standard bundle containing JavaScript and CSS</li>
-        <li>dist/ag-grid-min.js -> minified bundle containing JavaScript and CSS</li>
-    </ul>
-    </p>
-
-    <h4>CommonJS</h4>
-
-    <p>
-        To use CommonJS, it's best to download the packages via NPM and then either <i>require</i> (ECMA 5) or <i>import</i> (ECMA 6)
-        them into your project.
-    </p>
-
-    <pre>// ECMA 5 - using nodes require() method
-var AgGrid = require('ag-grid');
-
-// ECMA 6 - using the system import method
-import {Grid} from 'ag-grid/main';
-</pre>
-
-    <p>Most single page web-apps use CommonJS and Bundling, so will use the CommonJS version of ag-Grid.</p>
-
-    <h3>Additional Projects</h3>
-
-    <p>If using React or Angular 2, you will also need to reference the additional ag-Grid project for that
-    framework. Details are provided the documentation for those frameworks.</p>
-
-    <h3>Bundled vs CommonJS & Frameworks Summary</h3>
-
-    <p>
-        The table below summarises bundles vs CommonJS with respect to the frameworks.
-    </p>
-
-    <style>
-        td {
-            padding: 2px 10px 2px 10px;
-        }
-        th {
-            padding: 2px 10px 2px 10px;
-        }
-        table {
-            margin-bottom: 10px;
-        }
-    </style>
-
-    <table style="background-color: beige">
-        <tr style="background-color: blanchedalmond">
-            <th>Framework</th>
-            <th>Works with Bundled</th>
-            <th>Works with CommonJS</th>
-            <th>Extra Project</th>
-        </tr>
-        <tr>
-            <td>Pure JavaScript</td>
-            <td>Works</td>
-            <td>Works</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <td>React</td>
-            <td>No</td>
-            <td>Works</td>
-            <td>ag-grid-react</td>
-        </tr>
-        <tr>
-            <td>Angular 1</td>
-            <td>Works</td>
-            <td>Works</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <td>Angular 2</td>
-            <td>No</td>
-            <td>Works</td>
-            <td>ag-grid-ng2</td>
-        </tr>
-        <tr>
-            <td>Web Components</td>
-            <td>Works</td>
-            <td>Works</td>
-            <td>-</td>
-        </tr>
-    </table>
-
-    <p>
-        The 'odd ones out' above are Angular 2 and React. Both of these modules have dependencies
-        on their associated frameworks (eg ag-grid-ng2 has a dependency on Angular 2). To provide
-        these dependencies, CommonJS is used, thus you need CommonJS packaging for them to work.
-        In other words, the bundled ag-Grid, doesn't have a reference to the Angular 2 or React
-        libraries, so you can't use it in these scenarios.
+        If you want non-minified versions, you need to include: angular-grid.js, angular-grid.css, theme-fresh.css
+        (optional if you want bundled fresh theme) and theme-dark.css (optional if you want bundled dark theme).
     </p>
     <p>
-        Also to keep these Angular 2 and React dependencies out of the core grid (you don't want Angular 2 dependency
-        if using React for example) they are separated out into separate projects.
-    </p>
-
-    <h3>List of Loading / Building Examples</h3>
-
-    <p>
-        Below is a list of the examples demonstrating the different build tools, loading mechanisms and frameworks.
-        You may not see the exact stack you want, but you can grab information from all the examples. Eg you might
-        want to program React and Typescript, below you can see examples of React and Typescript, just not together.
-    </p>
-    <ul>
-        <li><a href="https://github.com/ceolter/ag-grid-commonjs-example">CommonJS, Gulp and Browersify</a> - Project on Github</li>
-        <li><a href="https://github.com/ceolter/ag-grid-react-example">React, Webpack, Babel</a> - Project on Github</li>
-        <li><a href="https://github.com/ceolter/ag-grid-ng2-example">Angular 2, SystemX, JSPM, Typescript</a> - Project on Github</li>
-    </ul>
-
-    <h3>Documentation Examples</h3>
-    <p>
-        Almost all the examples in the online documentation use the self contained bundle of ag-Grid and do not use
-        any framework. This is to make the examples as easy to follow (focusing only on what the example
-        is about) and easy to copy and run locally.
+        If you want minified versions, download the equivalent '.min' files of the same names.
     </p>
 
     <p>
-        Also in the examples, ag-Grid is loaded with an additional parameter <i>"ignore=notused"</i>. If you are using
-        the self contained bundle <b>you do not need to include this extra parameter</b>. It's purpose is as a dummy parameter, which the documentation
+        AngularGrid has no dependencies. If you are using AngularJS, then it will register as a directive
+        with AngularJS, however that is optional, it is an optional dependency.
+    </p>
+
+    <note>
+        In all he examples in this online documentation, the resources are loaded with an additional parameter <i>"ignore=notused"</i>.
+        <b>You do not need to include this extra parameter</b>. It's purpose is as a dummy parameter, which the documentation
         changes every time there is a grid release, to trick the browser in getting the latest version rather than using a cached version.
         <br/>
-    </p>
-    <p>
         So eg, the example has this:<br/>
-    <pre>&lt;link rel="stylesheet" type="text/css" href="../dist/ag-grid.js?ignore=notused18"><br/></pre>
-    But all you need is this:<br/>
-    <pre>&lt;link rel="stylesheet" type="text/css" href="../dist/ag-grid.js"></pre>
-    </p>
+        <i>&lt;link rel="stylesheet" type="text/css" href="../dist/angular-grid.css?ignore=notused8"><br/></i>
+        But all you need is this:<br/>
+        <i>&lt;link rel="stylesheet" type="text/css" href="../dist/angular-grid.css"></i>
+    </note>
 
-    <h3>Choosing a Framework and What Next</h3>
+    <h4>Creating the AngularJS Module</h4>
+    If using AngularJS, while creating your AngularJS module, include Angular Grid as a dependency of your module. Eg:
+    <p/>
+    <pre><code>var module = angular.module("example", <b>["angularGrid"]</b>);</code></pre>
+
+    <h4>Angular Grid Div</h4>
 
     <p>
-        ag-Grid does not favor any framework. It's agnostic. It doesn't have a preference what framework you use. ag-Grid supports
-        5 flavours: React, AngularJS, Angular 2, Web Components and Native Javascript. Every ag-Grid
-        feature is fully available in each framework, there is no bias. You choose which framework you
-        want. So continue now to the section on the framework you are interested in, then jump to the
-        details of how to use the grid.
+        To include a grid in your html, add the Angular Grid attribute to a div. The value
+        of the div should be the provided grid options on the scope.
     </p>
 
-    <h2>
-        The ag-Grid License
-    </h2>
-
-    <p class="license">
-        The MIT License (MIT)
+    <p>
+        It is also usual (although not necessary) to provide a styling theme to
+        the grid. Two themes come with the grid, ag-fresh and ag-dark. Each one is
+        set by applying the corresponding class of the same name to the div. In the
+        example, ag-fresh is used.
     </p>
 
-    <p class="license">
-        Copyright (c) 2015 Niall Crosby
+    <p>
+        You must provide <b>width and height</b> to your grid. The grid is programmed to fill
+        the width and height you give it.
     </p>
 
-    <p class="license">
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
+    <pre>&lt;div <b>ag-grid="gridOptions" class="ag-fresh" style="height 100%"</b>>&lt;/div></pre>
+
+    <p>
+        (note: a div by default has 100% width, so the width is not specified explicitly above).
     </p>
 
-    <p class="license">
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
+    <h4>Grid Options</h4>
+    <p>
+        The grid options provide AngularGrid with the details needed to render. At a
+        minimum you provide the columns (columnDefs) and the rows (rowData).
     </p>
 
-    <p class="license">
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-    </p>
+    <h4>Very Simple Example</h4>
+    <show-example example="example1" example-height="200px"></show-example>
+
+    <h2>Loading Rows</h2>
+
+    <h4>Calling onNewRows()</h4>
+
+    If rows are loaded after the grid is initialised, call the grid's API function to update the rows after the load.
+
+    <pre><code>$scope.gridOptions.api.onNewRows()</code></pre>
+
+    <p/>
+
+    The API is explained in full in it's own section.
+
+    <p/>
+
+    <show-example example="example2"></show-example>
+
+
+    <h2>Width and Height</h2>
+
+    <h4>Fixed Width and Height</h4>
+
+    Set the width and height of the table by applying CSS to the containing div. Eg:
+
+    <p/>
+
+    <pre><code>style="width: 100px; height: 100px;"</code></pre>
+
+    <h4>Percent Width and Height</h4>
+
+    The width and / or height can also be set to a percentage. Eg:
+
+    <pre><code>style="width: 100%; height: 100%;"</code></pre>
+
+    <h4>Changing Width and Height</h4>
+
+    If the width and / or height change after the grid is initialised, the grid will
+    automatically resize to fill the new area.
+
+    <show-example example="example3"></show-example>
 
 </div>
 
