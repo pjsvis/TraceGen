@@ -1,3 +1,16 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    // TODO: Figure out the correct path to get Salsa working
+    // Ref: https://code.visualstudio.com/updates#vscode
+    //"typescript.tsdk": "/Users/pesmith/AppData/Roaming/npm/node_modules/typescript/lib",
+   
+    "files.exclude": {
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        "**/*.js.map": {},
+        "public/lib/**/*.*": {},
+       // "public/dist/**/*.*": {},
+        "Scripts/*.*": {},
+    }
 }
