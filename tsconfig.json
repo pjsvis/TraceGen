@@ -3,12 +3,12 @@
         "target": "es5",
         "module": "amd",
         "sourceMap": true,
-        "watch": true,
+        //"watch": true,
         //"outFile": "dist/app.js",
         "noLib": false,
         "allowJs": false,
         "listFiles": true ,
         "noImplicitAny": false
      },
-     "exclude": ["node_modules", "lib"]
+     "exclude": ["node_modules", "lib", "dist"]
 }

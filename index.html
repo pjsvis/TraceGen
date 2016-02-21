@@ -12,15 +12,20 @@
     <link rel="stylesheet" href="lib/ui-select/dist/select.css" />
     <link rel="stylesheet" href="lib/angular-ya-treeview/dist/ya-treeview.min.css" />
     <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css" />
+<<<<<<< HEAD
     <!-- endinject -->
+=======
+    <!-- endbower -->
+<<<<<<< HEAD
+    <!-- Manually inject ag-grid as wiredep makes a mess of it -->
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
     <!--<link rel="stylesheet" href="src/ag-grid/ag-grid.min.css"></script>-->
-    <link rel="stylesheet" href="lib/ag-grid/dist/angular-grid.min.css"></script>
-    <link rel="stylesheet" href="lib/ag-grid/dist/theme-blue.min.css"></script>
-    <link rel="stylesheet" href="lib/ag-grid/dist/theme-dark.min.css"></script>
-    <link rel="stylesheet" href="lib/ag-grid/dist/theme-fresh.min.css"></script>
+=======
+>>>>>>> parent of df2118a... Updated gulpfile.js
     <!-- inject:css -->
     <link rel="stylesheet" href="/dist/app.css">
     <!-- endinject -->
+
     <style>
         body {
             padding-top: 50px;
@@ -28,20 +33,26 @@
     </style>
 
     <!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js "></script>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 </head>
 
 <body>
-    <div class="container ">
-        <div class="row ">
-            <div class="col-md-12 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!--<h1>app has been scaffolded, yo!</h1>
+                <p class="lead">With layouts and styling by bootstrap</p>
+                <p>
+                    Plus sweet font-awesome icons
+                    <i class="fa fa-thumbs-o-up"></i>
+                </p>
+                <demo></demo>-->
                 <div ng-view></div>
             </div>
         </div>
     </div>
-    
     <!-- TODO: concat and minify this lot for production -->
     <!-- bower:js -->
     <script src="lib/jquery/dist/jquery.js"></script>
@@ -61,16 +72,54 @@
     <script src="lib/ng-file-upload/ng-file-upload.js"></script>
     <script src="lib/ui-select/dist/select.js"></script>
     <script src="lib/angular-ya-treeview/dist/ya-treeview-tpls.min.js"></script>
+    <script src="lib/ag-grid/dist/ag-grid.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/ng-idle/angular-idle.js"></script>
     <script src="lib/angular-translate/angular-translate.js"></script>
     <script src="lib/codemirror/lib/codemirror.js"></script>
     <script src="lib/angular-ui-codemirror/ui-codemirror.js"></script>
+<<<<<<< HEAD
     <!-- endinject -->
     <!-- inject:js -->
     <script src="/src/services/AppState.js"></script>
+=======
+    <!-- endbower -->
+
+    <!-- inject:js -->
+<<<<<<< HEAD
+    <script src="/src/browserCaps.js"></script>
+    <script src="/src/Reports/ManagementReport.controller.js"></script>
+    <script src="/src/Reports/Report.Service.js"></script>
+    <script src="/src/Reports/Report.controller.js"></script>
+    <script src="/src/Reports/Report.routes.js"></script>
+    <script src="/src/Reports/TesterCertReport.controller.js"></script>
+    <script src="/src/ProvisionSim/ProvisionSim.js"></script>
+    <script src="/src/ProvisionSim/ProvisionSimRoutes.js"></script>
+    <script src="/src/ProvisionSim/SimTestSuiteService.js"></script>
+    <script src="/src/ProvisionSim/SimTestSuites.js"></script>
+    <script src="/src/ProvisionSim/UserTestSuiteService.js"></script>
+    <script src="/src/Tester/Tester.controller.js"></script>
+    <script src="/src/Tester/Tester.routes.js"></script>
+    <script src="/src/UsersAdmin/AssignSim.js"></script>
+    <script src="/src/UsersAdmin/UsersAdmin.js"></script>
+    <script src="/src/UsersAdmin/UsersAdminRoutes.js"></script>
+    <script src="/src/TraceDetails/TraceDetailsController.js"></script>
+    <script src="/src/TraceDetails/ViewMediaController.js"></script>
+    <script src="/src/UtpTraceSummary/Summary.service.js"></script>
+    <script src="/src/UtpTraceSummary/UtpTraceSummary.js"></script>
+    <script src="/src/UtpTraceSummary/UtpTraceSummary.routes.js"></script>
+    <script src="/src/UtpTraceSummary/UtpTraceSummarySearch.js"></script>
+    <script src="/src/ag-grid/ag-grid.min.js"></script>
+    <script src="/src/services/AppState.js"></script>
+    <script src="/src/services/DynamicSimService.js"></script>
+    <script src="/src/services/download-xml.service.js"></script>
+    <script src="/src/services/paginator.service.js"></script>
+=======
+    <script src="/src/services/AppState.js"></script>
+>>>>>>> parent of df2118a... Updated gulpfile.js
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
     <!-- endinject -->
-    <script src="/src/templates.js "></script>
+    <script src="/dist/appJs.js"></script>
 </body>
 
 </html>

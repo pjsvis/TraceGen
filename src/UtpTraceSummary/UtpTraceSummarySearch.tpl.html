@@ -1,0 +1,84 @@
+﻿<div class="modal-header">
+   <h3 class="modal-title">Search for Traces</h3>
+   <!--<div>
+      <pre>{{vm.data}}</pre></div>-->
+</div>
+<div class="modal-body">
+
+   <div class="container">
+      <div class="row">
+         <div class="col-md-6 space-bottom">
+
+            <!--<ul class="list-group">
+               <li class="list-group-item">
+                  Get traces where the user is unknown
+                  <button type="button" class="btn btn-info btn-sm space-left"
+                          ng-click="vm.getUnknownUserTraces()" ng-model="vm.state.unknownUser"
+                          uib-btn-checkbox btn-checkbox-true="true"
+                          btn-checkbox-false="false">
+                     Ok
+                  </button>
+               </li>
+            </ul>-->
+
+
+            <ul class="list-group space-top">
+               <li class="list-group-item">Tester Traces</li>
+               <li class="list-group-item">
+                  <ui-select ng-model="vm.state.selectedTester">
+                     <ui-select-match>
+                        <span ng-bind="$select.selected.Name"></span>
+                     </ui-select-match>
+                     <ui-select-choices repeat="tester in (vm.data.Testers | filter: $select.search) track by tester.Id">
+                        <span ng-bind="tester.Name"></span>
+                     </ui-select-choices>
+                  </ui-select>
+               </li>
+
+               <li class="list-group-item">Simulator Traces</li>
+               <li class="list-group-item">
+                  <ui-select ng-model="vm.state.selectedSim">
+                     <ui-select-match>
+                        <span ng-bind="$select.selected.Name"></span>
+                     </ui-select-match>
+                     <ui-select-choices repeat="sim in (vm.data.Sims | filter: $select.search) track by sim.Id">
+                        <span ng-bind="sim.Name"></span>
+                     </ui-select-choices>
+                  </ui-select>
+               </li>
+
+               <li class="list-group-item">Test Suite Traces</li>
+               <li class="list-group-item">
+                  <ui-select ng-model="vm.state.selectedSuite">
+                     <ui-select-match>
+                        <span ng-bind="$select.selected.Name"></span>
+                     </ui-select-match>
+                     <ui-select-choices repeat="suite in (vm.data.TestSuites | filter: $select.search) track by suite.Id">
+                        <span ng-bind="suite.Name"></span>
+                     </ui-select-choices>
+                  </ui-select>
+               </li>
+            </ul>
+            <!--TODO: Run a search to find out how many items will be returned -->
+            <span ng-if="vm.state.showSpinner"><img src="images/spinner.gif" height="30" width="30"></span>
+           <span class="text-muted h4" ng-if="vm.data.totalItems >=0">{{vm.data.totalItems | number}} traces found</span>
+         </div>
+      </div>
+
+   </div>
+</div>
+<div class="modal-footer">
+
+
+   <button class="btn btn-info btn-sm" type="button" ng-click="vm.okSearch()">OK</button>
+   <button class="btn btn-default btn-sm" type="button" ng-click="vm.clearSearch()">Reset</button>
+   <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancel()">Cancel</button>
+    
+    <!--TODO: Run a search to find out how many items will be returned -->
+    <span class="checkbox pull-left">
+    <label>
+      <input type="checkbox" ng-model="vm.state.showTraceCountOnly"> Show trace count only 
+    </label>
+  </span>
+
+</div>

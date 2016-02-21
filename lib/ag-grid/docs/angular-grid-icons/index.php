@@ -11,7 +11,7 @@ include '../documentation_header.php';
     <h2>Icons</h2>
 
     <p>
-        ag-Grid comes with default icons that are created using SVG. You can provide your own icons for the grid to use.
+        Angular Grid comes with default icons that are created using SVG. You can provide your own icons for the grid to use.
     </p>
 
     <p>
@@ -48,8 +48,8 @@ gridOptions.icons = {
     sortUnSort: myUnSortIcon,
     groupExpanded: myGroupExpandedIcon,
     groupContracted: myGroupContractedIcon,
-    columnGroupOpened: myGroupExpandedIcon,
-    columnGroupClosed: myGroupContractedIcon,
+    headerGroupOpened: myGroupExpandedIcon,
+    headerGroupClosed: myGroupContractedIcon
     columnVisible: myColumnVisibleIcon,
     columnHidden: myColumnHiddenIcon,
     columnRemoveFromGroup: myColumnRemoveFromGroupIcon

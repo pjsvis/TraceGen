@@ -36,12 +36,9 @@
         <hr/>
 
         <footer class="license">
-            © ag-Grid Ltd 2015-2016
+            © Niall Crosby 2015
         </footer>
     </div>
 
 </body>
-
-<?php include_once("analytics.php"); ?>
-
 </html>

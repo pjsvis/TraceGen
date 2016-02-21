@@ -10,22 +10,17 @@ include '../documentation_header.php';
 
     <h2>Editing</h2>
 
-    <p>
-        You have two options for editing, one is use the default built-in editor (easy but limited),
-        or bake your own custom cell editors (powerful but more difficult).
-    </p>
+    You have two options for editing, one is use the default built-in editor (easy but limited),
+    or bake your own custom cell editors (powerful but more difficult).
 
     <div class="bigTitle">Default Editing</div>
 
-    <p>
-        ag-Grid provides functionality for editing text values out of the box. To enable
-        editing for a column, set the value 'editable' to 'true' in the column definition.
-    </p>
+    Angular Grid provides functionality for editing text values out of the box. To enable
+    editing for a column, set the value 'editable' to 'true' in the column definition.
 
-    <p>
-        By default, the grid will treat values as string values, and update the row with the
-        new string.
-    </p>
+    <p/>
+    By default, the grid will treat values as string values, and update the row with the
+    new string.
 
     <h4>Callback: New Value Handlers</h4>
 
@@ -45,37 +40,32 @@ include '../documentation_header.php';
         <b>rowIndex: </b>The index of the virtualised row.<br/>
         <b>colDef: </b>The column definition.<br/>
         <b>context: </b>The context as set in the gridOptions.<br/>
-        <b>api: </b>A reference to the ag-Grid API.<br/>
+        <b>api: </b>A reference to the Angular Grid API.<br/>
     </p>
 
     <h4>Callback: Cell Value Changed</h4>
 
     <p>
         After a cell has been changed with default editing (ie not your own custom cell renderer),
-        then <i>onCellValueChanged</i>, if provided, is called on the column def. This is used if
+        then <i>cellValueChanged</i>, if provided, is called on the column def. This is used if
         your application needs to do something after a value has been changed.
     </p>
     <p>
-        onCellValueChanged is provided with the same parameters as newValueHandler with one difference,
+        cellValueChanged is provided with the same parameters as newValueHandler with one difference,
         the <i>newValue</i>. If 'field' is in the column definition, the newValue contains the value
-        in the data after the edit. So for example, if the onCellValueChanged converts the provided
+        in the data after the edit. So for example, if the cellValueChanged converts the provided
         string value into a number, then newValue for newValueHandler will have the string, and
-        newValue for onCellValueChanged will have the number.
+        newValue for cellValueChanged will have the number.
     </p>
 
     <div class="bigTitle">Custom Editing</div>
 
-    <p>
-        For more details editing, beyond a simple text editor, you need to provide the cell
-        editing yourself (in which case, do not set 'editable' to true for the column, as
-        your renderer will do the editing).
-    </p>
+    For more details editing, beyond a simple text editor, you need to provide the cell
+    editing yourself (in which case, do not set 'editable' to true for the column, as
+    your renderer will do the editing).
 
     <h4>Example</h4>
-
-    <p>
-        The example below shows editing in the following ways:
-    </p>
+    The example below shows editing in the following ways:<br/>
 
     <table class="table">
         <tr>
@@ -98,8 +88,15 @@ include '../documentation_header.php';
                 is used to convert the string to a number before attaching to the row.</td>
         </tr>
         <tr>
-            <th>Custom</th>
-            <td>Custom editing. The cellRenderer provides a drop down selection.</td>
+            <th>Custom with Angular</th>
+            <td>Custom editing using a cell renderer. AngularJS is used for the
+                cell rendering. 'angularCompileRows' is set to true in grid options to support angular in
+                cell renderers.</td>
+        </tr>
+        <tr>
+            <th>Custom no Angular</th>
+            <td>Custom editing using a cell renderer. Native Javascript (no angular
+                JS) is used for the editing.</td>
         </tr>
     </table>
 
@@ -107,13 +104,11 @@ include '../documentation_header.php';
 
     <h4>Advanced Pop Editing</h4>
 
-    <p>
-        If you need an advanced popup for editing (for example, providing a complex user search), then
-        you will soon realise that the cell renderer is restricted to the cell, overflow will be clipped.
-        To get around this, have the cell renderer create a GUI widget who's parent is outside the table,
-        and hence not restricted by the cell bounding box. The renderer can work out the best place to
-        display the popup using the screen coordinates of the cell.
-    </p>
+    If you need an advanced popup for editing (for example, providing a complex user search), then
+    you will soon realise that the cell renderer is restricted to the cell, overflow will be clipped.
+    To get around this, have the cell renderer create a GUI widget who's parent is outside the table,
+    and hence not restricted by the cell bounding box. The renderer can work out the best place to
+    display the popup using the screen coordinates of the cell.
 
 </div>
 

@@ -2,8 +2,6 @@
 ag-Grid
 ==============
 
-"ag" stands for AGnostic
-
 #### Install with Bower
 ```sh
 $ bower install ag-grid
@@ -11,10 +9,10 @@ $ bower install ag-grid
 
 #### Install with Npm
 ```sh
-$ npm install ag-grid
+$ npm install angular-grid
 ```
 
-See the [www.ag-grid.com](http://www.ag-grid.com) for overview and documentation.
+See the [www.angulargrid.com](http://www.angulargrid.com) for overview and documentation.
 
 
 Building
@@ -26,9 +24,9 @@ To build:
 - `bower install`
 - `gulp` or `gulp release`
 
-Default gulp task is for development. It includes source maps, does not include minification, and starts a watch.
+Normal 'gulp' does not include minification or source maps, and starts a watch. This is for development.
 
-'release' gulp task does minification and no source maps. This is for releasing.
+'gulp release' does minification and no source maps. This is for releasing.
 
 If you are doing a Pull Request:
 - Make your code changes in `src/` files only, don't update dist files
@@ -37,33 +35,35 @@ If you are doing a Pull Request:
 - Discard all changes to `dist/`
 - Create Pull Request
 
-Folder Structure
-==============
-The new build has the following structure:
-- **\src** -> contains source files (TypeScript and CSS), don't touch these!
-- **\dist** -> contains distribution files
-- **\dist\ag-grid.js and \dist\ag-grid.min.js** -> use these if not using a package manager and put ag-Grid on
-the global scope. The new JavaScript distribution files contain the CSS for the grid, no need to reference
-separately.
-- **\dist\styles** -> contains CSS files, used if doing your own bundling.
-- **\dist\lib** -> contains compiles JavaScript files in CommonJS format.
-- **\main.js** -> CommonJS root file, reference this file if importing project via CommonJS.
-- **\main.d.ts** -> CommonJS root definition file.
-
-
 Asking Questions
 ==============
 
 Please do not use GitHub issues to ask questions. Ask questions on the
-[website forum](http://www.ag-grid.com/forum).
+[website forum](http://www.angulargrid.com/forum).
 
 
 Contributing
 ==============
 
+<<<<<<< HEAD
 ag-Grid is not looking for contributors. It is not intended to be developed
 by an online community.
 
 PR's on new features **are not** generally accepted. 
 
 PR's on small bug fixes **are** generally accepted.
+=======
+I am not looking for contributors for this project. If you have ideas, feel free to
+get in touch and let me know. Or if you want to suggest something, feel free to
+create a pull request with your ideas.
+
+My reason for not looking for contributors is that this grid is my hobby,
+something I work on in my spare time and enjoy. The design is something of a passion,
+and I'm bringing the grid into a particular direction. To take on contributors
+would require overhead of organisation, as well as agreeing direction (both
+technical implementation and functional requirements).
+
+If you would like to help, then please provide me with guidance and advice.
+I don't claim to know everything, so welcome others opinions on the direction
+of the project.
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6

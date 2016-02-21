@@ -1,110 +1,103 @@
-import SvgFactory from "../svgFactory";
-import Constants from "../constants";
-import _ from '../utils';
-import GridOptionsWrapper from "../gridOptionsWrapper";
-import {ColumnController} from "../columnController/columnController";
-import PopupService from "../widgets/agPopupService";
-import DragAndDropService from "../dragAndDrop/dragAndDropService";
-import EventService from "../eventService";
-import {Events} from "../events";
-import AgDropdownList from "../widgets/agDropdownList";
-import Column from "../entities/column";
-import AgList from "../widgets/agList";
-import BorderLayout from "../layout/borderLayout";
+/// <reference path="../widgets/agList.ts" />
+/// <reference path="../constants.ts" />
+/// <reference path="../utils.ts" />
+/// <reference path="../layout/borderLayout.ts" />
+/// <reference path="../svgFactory.ts" />
+/// <reference path="../widgets/agDropdownList.ts" />
 
-var svgFactory = SvgFactory.getInstance();
+module awk.grid {
 
-export default class ValuesSelectionPanel {
+    var svgFactory = SvgFactory.getInstance();
+    var constants = Constants;
+    var utils = Utils;
 
-    private gridOptionsWrapper: GridOptionsWrapper;
-    private columnController: ColumnController;
-    private cColumnList: any;
-    private layout: any;
-    private popupService: PopupService;
-    private dragAndDropService: DragAndDropService;
+    export class ValuesSelectionPanel {
 
-    constructor(columnController: ColumnController, gridOptionsWrapper: GridOptionsWrapper,
-                popupService: PopupService, eventService: EventService,
-                dragAndDropService: DragAndDropService) {
-        this.dragAndDropService = dragAndDropService;
-        this.popupService = popupService;
-        this.gridOptionsWrapper = gridOptionsWrapper;
-        this.setupComponents();
-        this.columnController = columnController;
+        private gridOptionsWrapper: GridOptionsWrapper;
+        private columnController: ColumnController;
+        private cColumnList: any;
+        private layout: any;
+        private popupService: PopupService;
 
-        eventService.addEventListener(Events.EVENT_COLUMN_EVERYTHING_CHANGED, this.columnsChanged.bind(this));
-        eventService.addEventListener(Events.EVENT_COLUMN_VALUE_CHANGE, this.columnsChanged.bind(this));
-    }
+        constructor(columnController: ColumnController, gridOptionsWrapper: GridOptionsWrapper, popupService: PopupService) {
+            this.popupService = popupService;
+            this.gridOptionsWrapper = gridOptionsWrapper;
+            this.setupComponents();
+            this.columnController = columnController;
 
-    public getLayout() {
-        return this.layout;
-    }
+            this.columnController.addChangeListener(this.columnsChanged.bind(this));
+        }
 
-    private columnsChanged() {
-        this.cColumnList.setModel(this.columnController.getValueColumns());
-    }
+        public getLayout() {
+            return this.layout;
+        }
 
-    public addDragSource(dragSource: any) {
-        this.cColumnList.addDragSource(dragSource);
-    }
+        private columnsChanged() {
+            this.cColumnList.setModel(this.columnController.getValueColumns());
+        }
 
-    private cellRenderer(params: any) {
-        var column = params.value;
-        var colDisplayName = this.columnController.getDisplayNameForCol(column);
+        public addDragSource(dragSource: any) {
+            this.cColumnList.addDragSource(dragSource);
+        }
 
-        var eResult = document.createElement('span');
+        private cellRenderer(params: any) {
+            var column = params.value;
+            var colDisplayName = this.columnController.getDisplayNameForCol(column);
 
-        var eRemove = _.createIcon('columnRemoveFromGroup', this.gridOptionsWrapper, column, svgFactory.createArrowUpSvg);
-        _.addCssClass(eRemove, 'ag-visible-icons');
-        eResult.appendChild(eRemove);
+            var eResult = document.createElement('span');
 
-        var that = this;
-        eRemove.addEventListener('click', function () {
-            that.columnController.removeValueColumn(column);
-        });
+            var eRemove = utils.createIcon('columnRemoveFromGroup', this.gridOptionsWrapper, column, svgFactory.createArrowUpSvg);
+            utils.addCssClass(eRemove, 'ag-visible-icons');
+            eResult.appendChild(eRemove);
 
-        var agValueType = new AgDropdownList(this.popupService, this.dragAndDropService);
-        agValueType.setModel([Column.AGG_SUM, Column.AGG_MIN, Column.AGG_MAX]);
-        agValueType.setSelected(column.aggFunc);
-        agValueType.setWidth(45);
+            var that = this;
+            eRemove.addEventListener('click', function () {
+                that.columnController.removeValueColumn(column);
+            });
 
-        agValueType.addItemSelectedListener(function (item: any) {
-            that.columnController.setColumnAggFunction(column, item);
-        });
+            var agValueType = new AgDropdownList(this.popupService);
+            agValueType.setModel([constants.SUM, constants.MIN, constants.MAX]);
+            agValueType.setSelected(column.aggFunc);
+            agValueType.setWidth(45);
 
-        eResult.appendChild(agValueType.getGui());
+            agValueType.addItemSelectedListener(function (item: any) {
+                that.columnController.setColumnAggFunction(column, item);
+            });
 
-        var eValue = document.createElement('span');
-        eValue.innerHTML = colDisplayName;
-        eValue.style.paddingLeft = '2px';
-        eResult.appendChild(eValue);
+            eResult.appendChild(agValueType.getGui());
 
-        return eResult;
-    }
+            var eValue = document.createElement('span');
+            eValue.innerHTML = colDisplayName;
+            eValue.style.paddingLeft = '2px';
+            eResult.appendChild(eValue);
 
-    private setupComponents() {
-        var localeTextFunc = this.gridOptionsWrapper.getLocaleTextFunc();
-        var columnsLocalText = localeTextFunc('valueColumns', 'Aggregations');
-        var emptyMessage = localeTextFunc('valueColumnsEmptyMessage', 'Drag columns from above to aggregate values');
+            return eResult;
+        }
 
-        this.cColumnList = new AgList(this.dragAndDropService);
-        this.cColumnList.setCellRenderer(this.cellRenderer.bind(this));
-        this.cColumnList.setEmptyMessage(emptyMessage);
-        this.cColumnList.addStyles({height: '100%', overflow: 'auto'});
-        this.cColumnList.addBeforeDropListener(this.beforeDropListener.bind(this));
-        this.cColumnList.setReadOnly(true);
+        private setupComponents() {
+            var localeTextFunc = this.gridOptionsWrapper.getLocaleTextFunc();
+            var columnsLocalText = localeTextFunc('valueColumns', 'Value Columns');
+            var emptyMessage = localeTextFunc('valueColumnsEmptyMessage', 'Drag columns from above to create values');
 
-        var eNorthPanel = document.createElement('div');
-        eNorthPanel.style.paddingTop = '10px';
-        eNorthPanel.innerHTML = '<div style="text-align: center;">' + columnsLocalText + '</div>';
+            this.cColumnList = new AgList();
+            this.cColumnList.setCellRenderer(this.cellRenderer.bind(this));
+            this.cColumnList.setEmptyMessage(emptyMessage);
+            this.cColumnList.addStyles({height: '100%', overflow: 'auto'});
+            this.cColumnList.addBeforeDropListener(this.beforeDropListener.bind(this));
+            this.cColumnList.setReadOnly(true);
 
-        this.layout = new BorderLayout({
-            center: this.cColumnList.getGui(),
-            north: eNorthPanel
-        });
-    }
+            var eNorthPanel = document.createElement('div');
+            eNorthPanel.style.paddingTop = '10px';
+            eNorthPanel.innerHTML = '<div style="text-align: center;">' + columnsLocalText + '</div>';
 
-    private beforeDropListener(newItem: any) {
-        this.columnController.addValueColumn(newItem);
+            this.layout = new BorderLayout({
+                center: this.cColumnList.getGui(),
+                north: eNorthPanel
+            });
+        }
+
+        private beforeDropListener(newItem: any) {
+            this.columnController.addValueColumn(newItem);
+        }
     }
 }

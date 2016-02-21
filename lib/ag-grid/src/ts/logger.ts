@@ -1,31 +1,35 @@
-import GridOptionsWrapper from "./gridOptionsWrapper";
-export class LoggerFactory {
 
-    private logging: boolean;
+module awk.grid {
 
-    public init(gridOptionsWrapper: GridOptionsWrapper): void {
-        this.logging = gridOptionsWrapper.isDebug();
-    }
+    export class LoggerFactory {
 
-    public create(name: string) {
-        return new Logger(name, this.logging);
-    }
-}
+        private logging: boolean;
 
-export class Logger {
-
-    private logging: boolean;
-    private name: string;
-
-    constructor(name: string, logging: boolean) {
-        this.name = name;
-        this.logging = logging;
-    }
-
-    public log(message: string) {
-        if (this.logging) {
-            console.log('ag-Grid.' + this.name + ': ' + message);
+        constructor(logging: boolean) {
+            this.logging = logging;
         }
+
+        public create(name: string) {
+            return new Logger(name, this.logging);
+        }
+    }
+
+    export class Logger {
+
+        private logging: boolean;
+        private name: string;
+
+        constructor(name: string, logging: boolean) {
+            this.name = name;
+            this.logging = logging;
+        }
+
+        public log(message: string) {
+            if (this.logging) {
+                console.log(this.name + " " + message);
+            }
+        }
+
     }
 
 }

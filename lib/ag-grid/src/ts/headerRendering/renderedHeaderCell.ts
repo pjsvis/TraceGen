@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import _ from '../utils';
 import RenderedHeaderElement from "./renderedHeaderElement";
 import Column from "../entities/column";
@@ -68,306 +69,340 @@ export default class RenderedHeaderCell extends RenderedHeaderElement {
             func();
         });
     }
+=======
+/// <reference path='../utils.ts' />
+/// <reference path='../filter/filterManager.ts' />
+/// <reference path='../gridOptionsWrapper.ts' />
+/// <reference path='../columnController.ts' />
+/// <reference path='renderedHeaderElement.ts' />
 
-    private createScope(parentScope: any): void {
-        if (this.getGridOptionsWrapper().isAngularCompileHeaders()) {
-            this.childScope = parentScope.$new();
-            this.childScope.colDef = this.column.getColDef();
-            this.childScope.colDefWrapper = this.column;
+module awk.grid {
 
-            this.destroyFunctions.push( ()=> {
+    var _ = Utils;
+    var constants = Constants;
+    var svgFactory = SvgFactory.getInstance();
+
+    export class RenderedHeaderCell extends RenderedHeaderElement {
+
+        private static DEFAULT_SORTING_ORDER = [constants.ASC, constants.DESC, null];
+
+        private eHeaderCell: HTMLElement;
+        private eSortAsc: HTMLElement;
+        private eSortDesc: HTMLElement;
+        private eSortNone: HTMLElement;
+        private eFilterIcon: HTMLElement;
+
+        private column: Column;
+        private gridOptionsWrapper: GridOptionsWrapper;
+        private parentScope: any;
+        private childScope: any; //todo: destroy this
+        private filterManager: FilterManager;
+        private columnController: ColumnController;
+        private $compile: any;
+        private angularGrid: Grid;
+        private parentGroup: RenderedHeaderGroupCell;
+
+        private startWidth: number;
+
+        constructor(column: Column, parentGroup: RenderedHeaderGroupCell, gridOptionsWrapper: GridOptionsWrapper,
+                    parentScope: any, filterManager: FilterManager, columnController: ColumnController,
+                    $compile: any, angularGrid: Grid, eRoot: HTMLElement) {
+            super(eRoot);
+            this.column = column;
+            this.parentGroup = parentGroup;
+            this.gridOptionsWrapper = gridOptionsWrapper;
+            this.parentScope = parentScope;
+            this.filterManager = filterManager;
+            this.columnController = columnController;
+            this.$compile = $compile;
+            this.angularGrid = angularGrid;
+
+            this.setupComponents();
+        }
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
+
+        public getGui(): HTMLElement {
+            return this.eHeaderCell;
+        }
+
+        public destroy(): void {
+            if (this.childScope) {
                 this.childScope.$destroy();
-            });
-        }
-    }
-
-    private addAttributes(): void {
-        this.eHeaderCell.setAttribute("colId", this.column.getColId());
-    }
-
-    private addMenu(): void {
-        var eMenu = <HTMLElement> this.eHeaderCell.querySelector('#agMenu');
-
-        // if no menu provided in template, do nothing
-        if (!eMenu) {
-            return;
-        }
-
-        var weWantMenu = this.getGridOptionsWrapper().isEnableFilter() && !this.column.getColDef().suppressMenu;
-        if (!weWantMenu) {
-            _.removeFromParent(eMenu);
-            return;
-        }
-
-        var that = this;
-        eMenu.addEventListener('click',function () {
-            that.filterManager.showFilter(that.column, this);
-        });
-
-        if (!this.getGridOptionsWrapper().isSuppressMenuHide()) {
-            eMenu.style.opacity = '0';
-            this.eHeaderCell.addEventListener('mouseenter', function () {
-                eMenu.style.opacity = '1';
-            });
-            this.eHeaderCell.addEventListener('mouseleave', function () {
-                eMenu.style.opacity = '0';
-            });
-        }
-        var style = <any> eMenu.style;
-        style['transition'] = 'opacity 0.5s, border 0.2s';
-        style['-webkit-transition'] = 'opacity 0.5s, border 0.2s';
-    }
-
-    private removeSortIcons(): void {
-        _.removeFromParent(this.eHeaderCell.querySelector('#agSortAsc'));
-        _.removeFromParent(this.eHeaderCell.querySelector('#agSortDesc'));
-        _.removeFromParent(this.eHeaderCell.querySelector('#agNoSort'));
-    }
-
-    private addSortIcons(): void {
-        this.eSortAsc = <HTMLElement> this.eHeaderCell.querySelector('#agSortAsc');
-        this.eSortDesc = <HTMLElement> this.eHeaderCell.querySelector('#agSortDesc');
-        this.eSortNone = <HTMLElement> this.eHeaderCell.querySelector('#agNoSort');
-
-        if (this.eSortAsc) {
-            this.eSortAsc.style.display = 'none';
-        }
-        if (this.eSortDesc) {
-            this.eSortDesc.style.display = 'none';
-        }
-
-        var showingNoSortIcon = this.column.getColDef().unSortIcon || this.getGridOptionsWrapper().isUnSortIcon();
-        // 'no sort' icon
-        if (!showingNoSortIcon) {
-            _.removeFromParent(this.eSortNone);
-        }
-    }
-
-    private addMovingCss(): void {
-        // this function adds or removes the moving css, based on if the col is moving
-        var addMovingCssFunc = ()=> {
-            if (this.column.isMoving()) {
-                _.addCssClass(this.eHeaderCell, 'ag-header-cell-moving');
-            } else {
-                _.removeCssClass(this.eHeaderCell, 'ag-header-cell-moving');
             }
-        };
-        // call it now once, so the col is set up correctly
-        addMovingCssFunc();
-        // then call it every time we are informed of a moving state change in the col
-        this.column.addEventListener(Column.EVENT_MOVING_CHANGED, addMovingCssFunc);
-        // finally we remove the listener when this cell is no longer rendered
-        this.destroyFunctions.push(()=> {
-            this.column.removeEventListener(Column.EVENT_MOVING_CHANGED, addMovingCssFunc);
-        });
-    }
-
-    private setupComponents(eRoot: HTMLElement, parentScope: any, dragService: DragService, gridPanel: GridPanel): void {
-        this.eHeaderCell = this.headerTemplateLoader.createHeaderElement(this.column);
-
-        _.addCssClass(this.eHeaderCell, 'ag-header-cell');
-
-        this.createScope(parentScope);
-        this.addAttributes();
-        this.addHeaderClassesFromCollDef(this.column.getColDef(), this.eHeaderCell);
-
-        this.addMovingCss();
-
-        var colDef = this.column.getColDef();
-
-        // add tooltip if exists
-        if (colDef.headerTooltip) {
-            this.eHeaderCell.title = colDef.headerTooltip;
         }
 
+        private createScope(): void {
+            if (this.gridOptionsWrapper.isAngularCompileHeaders()) {
+                this.childScope = this.parentScope.$new();
+                this.childScope.colDef = this.column.colDef;
+                this.childScope.colIndex = this.column.index;
+                this.childScope.colDefWrapper = this.column;
+            }
+        }
+
+        private addClasses(): void {
+            _.addCssClass(this.eHeaderCell, 'ag-header-cell');
+            if (this.gridOptionsWrapper.isGroupHeaders()) {
+                _.addCssClass(this.eHeaderCell, 'ag-header-cell-grouped'); // this takes 50% height
+            } else {
+                _.addCssClass(this.eHeaderCell, 'ag-header-cell-not-grouped'); // this takes 100% height
+            }
+        }
+
+        private addMenu(): void {
+            var showMenu = this.gridOptionsWrapper.isEnableFilter() && !this.column.colDef.suppressMenu;
+            if (!showMenu) {
+                return;
+            }
+
+            var eMenuButton = _.createIcon('menu', this.gridOptionsWrapper, this.column, svgFactory.createMenuSvg);
+            _.addCssClass(eMenuButton, 'ag-header-icon');
+
+            eMenuButton.setAttribute("class", "ag-header-cell-menu-button");
+            var that = this;
+            eMenuButton.onclick = function () {
+                that.filterManager.showFilter(that.column, this);
+            };
+            this.eHeaderCell.appendChild(eMenuButton);
+
+            if (!this.gridOptionsWrapper.isSuppressMenuHide()) {
+                eMenuButton.style.opacity = '0';
+                this.eHeaderCell.onmouseenter = function () {
+                    eMenuButton.style.opacity = '1';
+                };
+                this.eHeaderCell.onmouseleave = function () {
+                    eMenuButton.style.opacity = '0';
+                };
+            }
+            eMenuButton.style['transition'] = 'opacity 0.5s, border 0.2s';
+            var style: any = eMenuButton.style;
+            style['-webkit-transition'] = 'opacity 0.5s, border 0.2s';
+        }
+
+        private addSortIcons(headerCellLabel: HTMLElement): void {
+            var addSortIcons = this.gridOptionsWrapper.isEnableSorting() && !this.column.colDef.suppressSorting;
+            if (!addSortIcons) {
+                return;
+            }
+
+            this.eSortAsc = _.createIcon('sortAscending', this.gridOptionsWrapper, this.column, svgFactory.createArrowUpSvg);
+            this.eSortDesc = _.createIcon('sortDescending', this.gridOptionsWrapper, this.column, svgFactory.createArrowDownSvg);
+            _.addCssClass(this.eSortAsc, 'ag-header-icon ag-sort-ascending-icon');
+            _.addCssClass(this.eSortDesc, 'ag-header-icon ag-sort-descending-icon');
+            headerCellLabel.appendChild(this.eSortAsc);
+            headerCellLabel.appendChild(this.eSortDesc);
+
+            // 'no sort' icon
+            if (this.column.colDef.unSortIcon || this.gridOptionsWrapper.isUnSortIcon()) {
+                this.eSortNone = _.createIcon('sortUnSort', this.gridOptionsWrapper, this.column, svgFactory.createArrowUpDownSvg);
+                _.addCssClass(this.eSortNone, 'ag-header-icon ag-sort-none-icon');
+                headerCellLabel.appendChild(this.eSortNone);
+            }
+
+            this.eSortAsc.style.display = 'none';
+            this.eSortDesc.style.display = 'none';
+            this.addSortHandling(headerCellLabel);
+        }
+
+        private setupComponents(): void {
+            this.eHeaderCell = document.createElement("div");
+
+            this.createScope();
+            this.addClasses();
+            this.addHeaderClassesFromCollDef();
+
+            // add tooltip if exists
+            if (this.column.colDef.headerTooltip) {
+                this.eHeaderCell.title = this.column.colDef.headerTooltip;
+            }
+
+            if (this.gridOptionsWrapper.isEnableColResize() && !this.column.colDef.suppressResize) {
+                var headerCellResize = document.createElement("div");
+                headerCellResize.className = "ag-header-cell-resize";
+                this.eHeaderCell.appendChild(headerCellResize);
+                this.addDragHandler(headerCellResize);
+            }
+
+            this.addMenu();
+
+            // label div
+            var headerCellLabel = document.createElement("div");
+            headerCellLabel.className = "ag-header-cell-label";
+
+<<<<<<< HEAD
         // label div
         this.eText = <HTMLElement> this.eHeaderCell.querySelector('#agText');
         this.eHeaderCellLabel = <HTMLElement> this.eHeaderCell.querySelector('#agHeaderCellLabel');
+=======
+            // add in sort icons
+            this.addSortIcons(headerCellLabel);
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
 
-        this.addResize(eRoot, dragService);
-        this.addMove(eRoot, dragService, gridPanel);
-        this.addMenu();
 
-        // add in sort icons
-        this.addSort();
+            // add in filter icon
+            this.eFilterIcon = _.createIcon('filter', this.gridOptionsWrapper, this.column, svgFactory.createFilterSvg);
+            _.addCssClass(this.eFilterIcon, 'ag-header-icon');
+            headerCellLabel.appendChild(this.eFilterIcon);
 
-        // add in filter icon
-        this.eFilterIcon = <HTMLElement> this.eHeaderCell.querySelector('#agFilter');
+            // render the cell, use a renderer if one is provided
+            var headerCellRenderer: any;
+            if (this.column.colDef.headerCellRenderer) { // first look for a renderer in col def
+                headerCellRenderer = this.column.colDef.headerCellRenderer;
+            } else if (this.gridOptionsWrapper.getHeaderCellRenderer()) { // second look for one in grid options
+                headerCellRenderer = this.gridOptionsWrapper.getHeaderCellRenderer();
+            }
 
-        // render the cell, use a renderer if one is provided
-        var headerCellRenderer: any;
-        if (colDef.headerCellRenderer) { // first look for a renderer in col def
-            headerCellRenderer = colDef.headerCellRenderer;
-        } else if (this.getGridOptionsWrapper().getHeaderCellRenderer()) { // second look for one in grid options
-            headerCellRenderer = this.getGridOptionsWrapper().getHeaderCellRenderer();
-        }
+            var headerNameValue = this.columnController.getDisplayNameForCol(this.column);
 
-        var headerNameValue = this.columnController.getDisplayNameForCol(this.column);
-
-        if (this.eText) {
             if (headerCellRenderer) {
-                this.useRenderer(headerNameValue, headerCellRenderer);
+                this.useRenderer(headerNameValue, headerCellRenderer, headerCellLabel);
             } else {
                 // no renderer, default text render
-                this.eText.className = 'ag-header-cell-text';
-                this.eText.innerHTML = headerNameValue;
+                var eInnerText = document.createElement("span");
+                eInnerText.className = 'ag-header-cell-text';
+                eInnerText.innerHTML = headerNameValue;
+                headerCellLabel.appendChild(eInnerText);
+            }
+
+            this.eHeaderCell.appendChild(headerCellLabel);
+            this.eHeaderCell.style.width = _.formatWidth(this.column.actualWidth);
+
+            this.refreshFilterIcon();
+            this.refreshSortIcon();
+        }
+
+        private useRenderer(headerNameValue: string, headerCellRenderer: Function,
+                            headerCellLabel: HTMLElement): void {
+            // renderer provided, use it
+            var cellRendererParams = {
+                colDef: this.column.colDef,
+                $scope: this.childScope,
+                context: this.gridOptionsWrapper.getContext(),
+                value: headerNameValue,
+                api: this.gridOptionsWrapper.getApi(),
+                eHeaderCell: this.eHeaderCell
+            };
+            var cellRendererResult = headerCellRenderer(cellRendererParams);
+            var childToAppend: any;
+            if (_.isNodeOrElement(cellRendererResult)) {
+                // a dom node or element was returned, so add child
+                childToAppend = cellRendererResult;
+            } else {
+                // otherwise assume it was html, so just insert
+                var eTextSpan = document.createElement("span");
+                eTextSpan.innerHTML = cellRendererResult;
+                childToAppend = eTextSpan;
+            }
+            // angular compile header if option is turned on
+            if (this.gridOptionsWrapper.isAngularCompileHeaders()) {
+                var childToAppendCompiled = this.$compile(childToAppend)(this.childScope)[0];
+                headerCellLabel.appendChild(childToAppendCompiled);
+            } else {
+                headerCellLabel.appendChild(childToAppend);
             }
         }
 
-        this.eHeaderCell.style.width = _.formatWidth(this.column.getActualWidth());
-
-        this.refreshFilterIcon();
-        this.refreshSortIcon();
-    }
-
-    private addSort(): void {
-        var enableSorting = this.getGridOptionsWrapper().isEnableSorting() && !this.column.getColDef().suppressSorting;
-        if (enableSorting) {
-            this.addSortIcons();
-            this.addSortHandling();
-        } else {
-            this.removeSortIcons();
-        }
-    }
-
-    private addMove(eRoot: HTMLElement, dragService: DragService, gridPanel: GridPanel): void {
-        if (this.getGridOptionsWrapper().isSuppressMovableColumns() || this.column.getColDef().suppressMovable) {
-            return;
-        }
-        if (this.getGridOptionsWrapper().isForPrint()) {
-            // don't allow moving of headers when forPrint, as the header overlay doesn't exist
-            return;
-        }
-
+<<<<<<< HEAD
         if (this.eHeaderCellLabel) {
             new MoveColumnController(this.column, this.eHeaderCellLabel, eRoot, this.eHeaderCell, this.headerRenderer, this.columnController, dragService, gridPanel, this.getGridOptionsWrapper());
-        }
-    }
-
-    private addResize(eRoot: HTMLElement, dragService: DragService): void {
-        var colDef = this.column.getColDef();
-        var eResize = this.eHeaderCell.querySelector('#agResizeBar');
-
-        // if no eResize in template, do nothing
-        if (!eResize) {
-            return;
+=======
+        public refreshFilterIcon(): void {
+            if (this.eFilterIcon) {
+                var filterPresent = this.filterManager.isFilterPresentForCol(this.column.colId);
+                var displayStyle = filterPresent ? 'inline' : 'none';
+                this.eFilterIcon.style.display = displayStyle;
+            }
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
         }
 
-        var weWantResize = this.getGridOptionsWrapper().isEnableColResize() && !colDef.suppressResize;
-        if (!weWantResize) {
-            _.removeFromParent(eResize);
-            return;
+        public refreshSortIcon(): void {
+            // update visibility of icons
+            var sortAscending = this.column.sort === constants.ASC;
+            var sortDescending = this.column.sort === constants.DESC;
+            var unSort = this.column.sort !== constants.DESC && this.column.sort !== constants.ASC;
+
+            if (this.eSortAsc) {
+                _.setVisible(this.eSortAsc, sortAscending);
+            }
+            if (this.eSortDesc) {
+                _.setVisible(this.eSortDesc, sortDescending);
+            }
+            if (this.eSortNone) {
+                _.setVisible(this.eSortNone, unSort);
+            }
         }
 
-        dragService.addDragHandling({
-            eDraggableElement: eResize,
-            eBody: eRoot,
-            cursor: 'col-resize',
-            startAfterPixels: 0,
-            onDragStart: this.onDragStart.bind(this),
-            onDragging: this.onDragging.bind(this)
-        });
+        private getNextSortDirection(): string {
 
-        var weWantAutoSize = !this.getGridOptionsWrapper().isSuppressAutoSize() && !colDef.suppressAutoSize;
-        if (weWantAutoSize) {
-            eResize.addEventListener('dblclick', (event: MouseEvent) => {
-                this.columnController.autoSizeColumn(this.column);
+            var sortingOrder: string[];
+            if (this.column.colDef.sortingOrder) {
+                sortingOrder = this.column.colDef.sortingOrder;
+            } else if (this.gridOptionsWrapper.getSortingOrder()) {
+                sortingOrder = this.gridOptionsWrapper.getSortingOrder();
+            } else {
+                sortingOrder = RenderedHeaderCell.DEFAULT_SORTING_ORDER;
+            }
+
+            if ( !Array.isArray(sortingOrder) || sortingOrder.length <= 0) {
+                console.warn('ag-grid: sortingOrder must be an array with at least one element, currently it\'s ' + sortingOrder);
+                return;
+            }
+
+            var currentIndex = sortingOrder.indexOf(this.column.sort);
+            var notInArray = currentIndex < 0;
+            var lastItemInArray = currentIndex == sortingOrder.length - 1;
+            var result: string;
+            if (notInArray || lastItemInArray) {
+                result = sortingOrder[0];
+            } else {
+                result = sortingOrder[currentIndex + 1];
+            }
+
+            // verify the sort type exists, as the user could provide the sortOrder, need to make sure it's valid
+            if (RenderedHeaderCell.DEFAULT_SORTING_ORDER.indexOf(result) < 0) {
+                console.warn('ag-grid: invalid sort type ' + result);
+                return null;
+            }
+
+            return result;
+        }
+
+        private addSortHandling(headerCellLabel: HTMLElement) {
+            var that = this;
+
+            headerCellLabel.addEventListener("click", function (event: any) {
+
+                // update sort on current col
+                that.column.sort = that.getNextSortDirection();
+
+                // sortedAt used for knowing order of cols when multi-col sort
+                if (that.column.sort) {
+                    that.column.sortedAt = new Date().valueOf();
+                } else {
+                    that.column.sortedAt = null;
+                }
+
+                var doingMultiSort = !that.gridOptionsWrapper.isSuppressMultiSort() && event.shiftKey;
+
+                // clear sort on all columns except this one, and update the icons
+                if (!doingMultiSort) {
+                    that.columnController.getAllColumns().forEach(function (columnToClear: any) {
+                        // Do not clear if either holding shift, or if column in question was clicked
+                        if (!(columnToClear === that.column)) {
+                            columnToClear.sort = null;
+                        }
+                    });
+                }
+
+                that.angularGrid.onSortingChanged();
             });
         }
-    }
 
-    private useRenderer(headerNameValue: string, headerCellRenderer: Function): void {
-        // renderer provided, use it
-        var cellRendererParams = {
-            colDef: this.column.getColDef(),
-            $scope: this.childScope,
-            context: this.getGridOptionsWrapper().getContext(),
-            value: headerNameValue,
-            api: this.getGridOptionsWrapper().getApi(),
-            eHeaderCell: this.eHeaderCell
-        };
-        var cellRendererResult = headerCellRenderer(cellRendererParams);
-        var childToAppend: any;
-        if (_.isNodeOrElement(cellRendererResult)) {
-            // a dom node or element was returned, so add child
-            childToAppend = cellRendererResult;
-        } else {
-            // otherwise assume it was html, so just insert
-            var eTextSpan = document.createElement("span");
-            eTextSpan.innerHTML = cellRendererResult;
-            childToAppend = eTextSpan;
-        }
-        // angular compile header if option is turned on
-        if (this.getGridOptionsWrapper().isAngularCompileHeaders()) {
-            var childToAppendCompiled = this.$compile(childToAppend)(this.childScope)[0];
-            this.eText.appendChild(childToAppendCompiled);
-        } else {
-            this.eText.appendChild(childToAppend);
-        }
-    }
-
-    public refreshFilterIcon(): void {
-        var filterPresent = this.filterManager.isFilterPresentForCol(this.column.getColId());
-
-        if (this.eFilterIcon) {
-            _.addOrRemoveCssClass(this.eHeaderCell, 'ag-header-cell-filtered', filterPresent);
-            this.eFilterIcon.style.display = filterPresent ? 'inline' : 'none';
-        }
-    }
-
-    public refreshSortIcon(): void {
-        // update visibility of icons
-        var sortAscending = this.column.getSort() === Column.SORT_ASC;
-        var sortDescending = this.column.getSort() === Column.SORT_DESC;
-        var sortNone = this.column.getSort() !== Column.SORT_DESC && this.column.getSort() !== Column.SORT_ASC;
-
-        if (this.eSortAsc) {
-            _.setVisible(this.eSortAsc, sortAscending);
-        }
-        if (this.eSortDesc) {
-            _.setVisible(this.eSortDesc, sortDescending);
-        }
-        if (this.eSortNone) {
-            _.setVisible(this.eSortNone, sortNone);
+        public onDragStart(): void {
+            this.startWidth = this.column.actualWidth;
         }
 
-        _.addOrRemoveCssClass(this.eHeaderCell, 'ag-header-cell-sorted-asc', sortAscending);
-        _.addOrRemoveCssClass(this.eHeaderCell, 'ag-header-cell-sorted-desc', sortDescending);
-        _.addOrRemoveCssClass(this.eHeaderCell, 'ag-header-cell-sorted-none', sortNone);
-    }
-
-    private getNextSortDirection(): string {
-
-        var sortingOrder: string[];
-        if (this.column.getColDef().sortingOrder) {
-            sortingOrder = this.column.getColDef().sortingOrder;
-        } else if (this.getGridOptionsWrapper().getSortingOrder()) {
-            sortingOrder = this.getGridOptionsWrapper().getSortingOrder();
-        } else {
-            sortingOrder = RenderedHeaderCell.DEFAULT_SORTING_ORDER;
-        }
-
-        if ( !Array.isArray(sortingOrder) || sortingOrder.length <= 0) {
-            console.warn('ag-grid: sortingOrder must be an array with at least one element, currently it\'s ' + sortingOrder);
-            return;
-        }
-
-        var currentIndex = sortingOrder.indexOf(this.column.getSort());
-        var notInArray = currentIndex < 0;
-        var lastItemInArray = currentIndex == sortingOrder.length - 1;
-        var result: string;
-        if (notInArray || lastItemInArray) {
-            result = sortingOrder[0];
-        } else {
-            result = sortingOrder[currentIndex + 1];
-        }
-
-        // verify the sort type exists, as the user could provide the sortOrder, need to make sure it's valid
-        if (RenderedHeaderCell.DEFAULT_SORTING_ORDER.indexOf(result) < 0) {
-            console.warn('ag-grid: invalid sort type ' + result);
-            return null;
-        }
-
+<<<<<<< HEAD
         return result;
     }
 
@@ -379,41 +414,47 @@ export default class RenderedHeaderCell extends RenderedHeaderElement {
 
             // update sort on current col
             this.column.setSort(this.getNextSortDirection());
-
-            // sortedAt used for knowing order of cols when multi-col sort
-            if (this.column.getSort()) {
-                this.column.setSortedAt(new Date().valueOf());
-            } else {
-                this.column.setSortedAt(null);
-            }
-
-            var doingMultiSort = !this.getGridOptionsWrapper().isSuppressMultiSort() && event.shiftKey;
-
-            // clear sort on all columns except this one, and update the icons
-            if (!doingMultiSort) {
-                this.columnController.clearSortBarThisColumn(this.column);
-            }
-
-            this.grid.onSortingChanged();
-        });
-    }
-
-    public onDragStart(): void {
-        this.startWidth = this.column.getActualWidth();
-    }
-
-    public onDragging(dragChange: number, finished: boolean): void {
-        var newWidth = this.startWidth + dragChange;
-        this.columnController.setColumnWidth(this.column, newWidth, finished);
-    }
-
-    public onIndividualColumnResized(column: Column) {
-        if (this.column !== column) {
-            return;
+=======
+        public onDragging(dragChange: number): void {
+            var newWidth = this.startWidth + dragChange;
+            this.columnController.setColumnWidth(this.column, newWidth);
         }
-        var newWidthPx = column.getActualWidth() + "px";
-        this.eHeaderCell.style.width = newWidthPx;
-    }
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
 
+        public onIndividualColumnResized(column: Column) {
+            if (this.column !== column) {
+                return;
+            }
+            var newWidthPx = column.actualWidth + "px";
+            this.eHeaderCell.style.width = newWidthPx;
+        }
+
+        private addHeaderClassesFromCollDef() {
+            if (this.column.colDef.headerClass) {
+                var classToUse: string | string[];
+                if (typeof this.column.colDef.headerClass === 'function') {
+                    var params = {
+                        colDef: this.column.colDef,
+                        $scope: this.childScope,
+                        context: this.gridOptionsWrapper.getContext(),
+                        api: this.gridOptionsWrapper.getApi()
+                    };
+                    var headerClassFunc = <(params: any) => string | string[]> this.column.colDef.headerClass;
+                    classToUse = headerClassFunc(params);
+                } else {
+                    classToUse = <string | string[]> this.column.colDef.headerClass;
+                }
+
+                if (typeof classToUse === 'string') {
+                    _.addCssClass(this.eHeaderCell, classToUse);
+                } else if (Array.isArray(classToUse)) {
+                    classToUse.forEach(function (cssClassItem: any) {
+                        _.addCssClass(this.eHeaderCell, cssClassItem);
+                    });
+                }
+            }
+        }
+
+    }
 
 }

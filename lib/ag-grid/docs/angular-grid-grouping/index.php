@@ -8,36 +8,40 @@ include '../documentation_header.php';
 
 <div>
 
-    <h2>Grouping Rows and Aggregation</h2>
+    <h2>Grouping and Aggregation</h2>
 
     <p>
-        To group, mark the column definitions you want to group by with a rowGroupIndex.
+        To group, provide the columns you want to group by into the grid options.
         There is no limit on the number of columns that can be used.
         For example, the following groups by country column, then language column:
-        <code><pre>gridOptions.columnDefs = [
-    {field: 'country', rowGroupIndex: 0},
-    {field: 'language', rowGroupIndex: 1}
-];</pre></code>
+        <pre>gridOptions.groupKeys = ['country','column'];</pre>
+        The identifiers are column ID's (see <a href="/angular-grid-column-definitions/index.php">
+        Column Definitions </a> for explanation of column IDs).
     </p>
 
-    <h3>Grouping Auto Column</h3>
-
-    <p>If row grouping is active, by default the grid will provide an additional column for displaying
-    a tree structure, with expand / collapse navigation, for displaying the groups.</p>
-
     <p>
-        The auto column only displaying when row grouping is active is useful when
-        the user is turning grouping on and off via the toolpanel.
-    </p>
-
-    <h3>Grid Grouping Properties</h3>
-    <p>
-        Grouping has the following grid properties (set these as grid properties, e.g. on the gridOptions, not on the columns):
+        The gridOption group parameters are as follows:
     </p>
     <table class="table">
         <tr>
-            <th>Property</th>
+            <th>Attribute</th>
             <th>Description</th>
+        </tr>
+        <tr>
+            <th>groupKeys</th>
+            <td>An array of 1 or more strings, each entry a column identifier to group by. Leave blank, or empty array, for no grouping.</td>
+        </tr>
+        <tr>
+            <th>groupAggFields</th>
+            <td>If grouping, used to create simple 'sum' aggregates. Provide an array of field names that should be
+                summed into the parent group. Use this over groupAggFunction if you want simple 'sum' aggregation.
+            </td>
+        </tr>
+        <tr>
+            <th>groupAggFunction(nodes, level)</th>
+            <td>If grouping, used to create complex aggregates. Provide a function to do the aggregation. Use this
+                if the default 'sum/min/max' aggregates provided is not enough.
+            </td>
         </tr>
         <tr>
             <th>groupUseEntireRow</th>
@@ -46,10 +50,20 @@ include '../documentation_header.php';
                 a grouping column (normally the first on the left) to show the group.</td>
         </tr>
         <tr>
+            <th>groupRowRenderer</th>
+            <td>If grouping, allows custom rendering of the group cell. Use this if you are not happy with the default
+                presentation of the group. This is only used when groupUseEntireRow=true. This gives you full control
+                of the row, so the grid will not provide any default expand / collapse or selection checkbox.</td>
+        </tr>
+        <tr>
+            <th>groupRowInnerRenderer</th>
+            <td>Similar to groupRowRenderer, except the grid will provide a default shell for row which includes an
+                expand / collapse function. The innerRenderer is responsible for just the inside part of the row.</td>
+        </tr>
+        <tr>
             <th>groupDefaultExpanded</th>
-            <td>If grouping, set to the number of levels to expand by default.
-                Eg 0 for none, 1 first level only, etc. Default is 0 (expand none).
-                Set to -1 for expand everything.
+            <td>If grouping, set to true, false or a number (default is false). If true, when data is loaded, groups will be expanded by default.
+            If false, they won't. If a number, then the first n levels will be expanded, eg 0 for none, 1 first level only, etc.
             </td>
         </tr>
         <tr>
@@ -63,21 +77,22 @@ include '../documentation_header.php';
         </tr>
         <tr>
             <th>groupColumnDef</th>
-            <td>Allows specifying the group 'auto column' if you are not happy with the default. If grouping, this column def is included as the first column definition in the grid. If not grouping,
-                this column is not included.
+            <td>If grouping, this column def is included as the first column definition in the grid. If not grouping,
+                this column is not included. Defining the grouping here (and not with the rest of your column
+                definitions) allows the grid to only show the grouping column when grouping is active, useful when
+                the user is turning grouping on and off via the toolpanel.
             </td>
         </tr>
         <tr>
             <th>groupSuppressAutoColumn</th>
             <td>If true, the grid will not swap in the grouping column when grouping is enabled. Use this if you
-                want complete control on the column displayed and don't want the grids help. In other words,
-                you alreay have a column in your column definitions that is responsible for displaying the groups.
+                want complete control on the column displayed and don't want the grids help.
             </td>
         </tr>
         <tr>
-            <th>groupHideGroupColumns</th>
-            <td>If true, when a column is row grouped, it is not displayed as a normal column. Useful when you
-                don't want the data appearing twice, once in the group column and once in the normal column.
+            <th>groupHidePivotColumns</th>
+            <td>If true, when a column is pivoted, it is not displayed as a normal column. Useful when you
+                don't want the data appearing twice, once is group column, once in normal column.
             </td>
         </tr>
         <tr>
@@ -93,34 +108,6 @@ include '../documentation_header.php';
                 levels always. This stops the possibly undesirable behaviour of the header details 'jumping'
                 to the footer on expand.
             </td>
-        </tr>
-    </table>
-
-    <p id="groupingCallbacks">
-        Grouping has the following callbacks:
-    </p>
-
-    <table class="table">
-        <tr>
-            <th>Callback</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <th>groupAggFunction(nodes, level)</th>
-            <td>If grouping, used to create complex aggregates. Provide a function to do the aggregation. Use this
-                if the default 'sum/min/max' aggregates provided is not enough.
-            </td>
-        </tr>
-        <tr>
-            <th>groupRowRenderer</th>
-            <td>If grouping, allows custom rendering of the group cell. Use this if you are not happy with the default
-                presentation of the group. This is only used when groupUseEntireRow=true. This gives you full control
-                of the row, so the grid will not provide any default expand / collapse or selection checkbox.</td>
-        </tr>
-        <tr>
-            <th>groupRowInnerRenderer</th>
-            <td>Similar to groupRowRenderer, except the grid will provide a default shell for row which includes an
-                expand / collapse function. The innerRenderer is responsible for just the inside part of the row.</td>
         </tr>
     </table>
 
@@ -141,7 +128,7 @@ include '../documentation_header.php';
     <p>
         Let the grid provide the default grouping column. This is the
         quickest way to get started.
-        <pre>gridOptions.groupSuppressAutoColumn = false; // or undefined
+        <pre>gridOptions.isgroupSuppressAutoColumn = false; // or undefined
 gridOptions.groupColumnDef = null; // or undefined</pre>
         All you have to do is provide your columns as normal and let the grid worry about introducing
         the column to show the group when you are grouping.
@@ -159,7 +146,7 @@ gridOptions.groupColumnDef = null; // or undefined</pre>
         to either choose the built in group cell renderer, or provide your own cell renderer that takes care
         of the grouping.
     </p>
-        <pre>gridOptions.groupSuppressAutoColumn = false; // or undefined
+        <pre>gridOptions.isgroupSuppressAutoColumn = false; // or undefined
 gridOptions.groupColumnDef = {
     cellRenderer: {
         renderer: 'group',
@@ -168,22 +155,20 @@ gridOptions.groupColumnDef = {
 };</pre>
     <p>
         Because a group column is just a normal column, you can provide all the column attributes, such as header name,
-        css style and class, field, valueGetter etc. All of these parameters are used as appropriate. The example
-        above uses the stock 'group' cellRenderer - you can also use this, or you can build your own cellRenderer
-        from scratch.
+        css style and class, field, valueGetter etc. All of these parameters are used as appropriate.
     </p>
 
     <h4>Option 3 - No Grid Swapping of Columns:</h4>
     <p>
         Tell the grid you don't want it's help, that you will provide the group column yourself, included
-        in the main list of columns. If you use this, make sure you do have at least one column showing the
+        in he main list of columns. If you use this, make sure you do have at least one column showing the
         group, otherwise the grid will not make sense as you will have no way to expand / contract the groups.
     </p>
     <p>
         This method can also be used to have multiple columns to display the groups, useful when you want to split
         the grouping across columns (eg one column is responsible
         for the country grouping, another for the language grouping).
-        <pre>gridOptions.groupSuppressAutoColumn = true;
+        <pre>gridOptions.isgroupSuppressAutoColumn = true;
 gridOptions.groupColumnDef = null; // doesn't matter, won't get used anyway</pre>
     </p>
 
@@ -201,9 +186,7 @@ gridOptions.groupColumnDef = null; // doesn't matter, won't get used anyway</pre
         keyMap: {from: 'to'},
         suppressCount: false,
         checkbox: true,
-        padding: 10,
-        innerRenderer: myInnerRenderer,
-        footerValueGetter: myFooterValueGetter
+        padding: 10
 }</pre>
 
     <p>
@@ -216,9 +199,6 @@ gridOptions.groupColumnDef = null; // doesn't matter, won't get used anyway</pre
         <li><b>suppressCount:</b> One of [true, false], if true, count is not displayed beside the name.</li>
         <li><b>checkbox:</b> One of [true,false], if true, a selection checkbox is included.</li>
         <li><b>padding:</b> A positive number. The amount of padding, in pixels, to indent each group.</li>
-        <li><b>suppressPadding:</b> Set to true to node including any padding (indentation) in the child rows.</li>
-        <li><b>innerRenderer:</b> The renderer to use for inside the cell (after grouping functions are added).</li>
-        <li><b>footerValueGetter:</b> The value getter for the footer text. Can be a function or expression.</li>
     </ul>
     </p>
 
@@ -235,28 +215,35 @@ gridOptions.groupColumnDef = null; // doesn't matter, won't get used anyway</pre
     <h3>Grouping with Aggregation</h3>
 
     <p>
-        You have two options for creating aggregates.
+        You have three options for creating aggregates.
         <ul>
         <li>
             <b>Option 1 - colDef.aggFunc:</b> Specify in the column definition what aggregation function
             you want to apply to that column. Available aggregation functions are [sum,min,max].
         </li>
         <li>
-            <b>Option 2 - gridOptions.groupAggFunction:</b> provide a function to do the aggregation. This
+            <b>Option 2 - gridOptions.groupAggFields:</b> Provide an array of field names that should be used
+            to create the aggregates. This is equivalent to specifying aggFunc='sum' on the relevant columns.
+            This method has the advantage of aggregating on fields that do not map to columns directly - an
+            example may be that the column uses a value getter for which the field is just one parameter.
+        </li>
+        <li>
+            <b>Option 3 - gridOptions.groupAggFunction:</b> provide a function to do the aggregation. This
             gives you full control.
         </li>
         </ul>
     </p>
 
     <note>
-        It is not possible to mix the above two options. If you provide your own <i>groupAggFunction</i>
-        then any column <i>aggFunc</i> specified will be ignored.
+        It is possible to mix option 1 and option 2 (ie both lists of aggregated fields will be combined).
+        If you choose option 3, then any configuration towards option 1 and 2 will be ignored.
     </note>
 
     <h4>Example Option 1 - Summing Fields</h4>
 
     <p>
-        The example below shows simple sum aggregation on fields gold, silver, bronze and total.
+        The example below shows simple sum aggregation. The fields gold, silver, bronze and total are aggregated
+        using simple sum aggregation.
     </p>
     <p>
         The example also shows the use of a grouping column. The grouping column is specified in the grid options.
@@ -299,21 +286,8 @@ gridOptions.groupColumnDef = null; // doesn't matter, won't get used anyway</pre
         when the group is collapsed.
     </p>
     <p>
-        The footer by default will display the word 'Total' followed by the group key. If this is not what you
-        want, then use the <i>footerValueGetter</i> option. The following shows two snippets for achieving
-        the same, one using a function, one using an expression.
+        The footer will display the word 'Total' followed by the group key.
     </p>
-    <pre><code>// use a function to return a footer value
-cellRenderer: {
-    renderer: 'group',
-    footerValueGetter: function(params) { return 'Total (' + params.value + ')'},
-}}
-
-// use an expression to return a footer value. this gives the same result as above
-    cellRenderer: {
-    renderer: 'group',
-    footerValueGetter: '"Total (" + x + ")"'
-}}</code></pre>
     <p>
         When showing the groups in one column, the aggregation data is displayed
         in the group header when collapsed, and only in the footer when expanded (ie it moves from the header
@@ -330,10 +304,12 @@ cellRenderer: {
         This is through throw the api method <i>recomputeAggregates</i>. For example, if you allow editing,
         and want the aggregates to update as new values are edited, then create code like the following:
 
-        <pre>// add a listener to the editable colDef
-colDef.onCellValueChanged = function() {
-    gridOptions.api.recomputeAggregates();
-}</pre>
+        <pre>
+        // add a listener to the editable colDef
+        colDef.cellValueChanged = function() {
+            gridOptions.api.recomputeAggregates();
+        }
+        </pre>
 
     </p>
 
@@ -342,7 +318,7 @@ colDef.onCellValueChanged = function() {
     <p>
         It is possible to override the rendering of the group row using <i>groupRowRenderer</i> and
         <i>groupRowInnerRenderer</i>. Use groupRowRenderer to take full control of the row rendering,
-        and provide a cellRenderer exactly how you would provide one for custom rendering of cells
+        and provide a cellRenderer exactly how you would provide on for custom rendering of cells
         for non-groups.
     </p>
     <p>
@@ -354,7 +330,7 @@ gridOptions.groupUseEntireRow = true;
 
 // option 2 - this does the exact same as the above, except we configure
 // it explicitly rather than letting the grid choose the defaults.
-// we tell the grid what renderer to use (the built in renderer) and we
+// we tell the grid what renderer to use (the build in renderer) and we
 // configure the default renderer with our own inner renderer
 gridOptions.groupUseEntireRow = true;
 gridOptions.groupRowRenderer: {
@@ -414,10 +390,6 @@ gridOptions.groupRowRenderer: {
     </p>
 
     <show-example example="example5"></show-example>
-
-    <note>Grouping using the whole row doesn't work very well with pinned columns, as the group
-    row gets split into a separate component for the pinned sections. At the time of writing,
-    there is no way around this problem.</note>
 
     <h3>Suppress Group Row</h3>
 

@@ -1,0 +1,76 @@
+<div class="modal-header">
+      <h4 class="modal-title">Assign Simulators to: <span class="text-info text-muted">{{vm.user.UserName}}</span></h4>
+</div>
+<div class="modal-body">
+
+      <div class="container">
+            <div class="col-md-3">
+                  <ul class="list-group fixed-assign-sim">
+                        <li class="list-group-item">
+                              <button class="btn btn-info btn-xs pull-right" ng-click="vm.state.showEdit=!vm.state.showEdit">Edit</button>
+                              <span class="h5 text-muted">Active Simulators</span>
+                        </li>
+                        <li class="list-group-item pointer" ng-repeat="sim in vm.data.ActiveSims" ng-class="{'active': sim == vm.state.selectedSim}"
+                        ng-click="vm.selectSim(sim)">
+                              <button type="button" class="btn btn-info btn-xs pull-right" ng-if="vm.state.showEdit" ng-click="vm.remove(sim)">
+                                    Remove
+                              </button>{{ sim.SimulatorName }} <span class="text-info">{{sim.SimTypeName}}</span>
+                        </li>
+                  </ul>
+
+                  <!-- Excluded Sims -->
+                  <ul class="list-group fixed-assign-sim" ng-if="vm.state.showEdit && vm.data.ExcludedSims.length > 0">
+                        <li class="list-group-item">
+                            <span class="h5 text-muted">Excluded Simulators</span>
+                            <div class="input-group space-top">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+                                <input type="text" class="form-control input-sm" ng-model="excludedSimFilter.SimulatorName" placeholder="Contains...">
+                            </div>  
+                        </li>
+                        <li class="list-group-item pointer" ng-repeat="sim in vm.data.ExcludedSims | filter: excludedSimFilter" href="">
+                              <button type="button" class="btn btn-info btn-xs pull-right" ng-click="vm.add(sim)">
+                                    Add
+                              </button>{{ sim.SimulatorName }}
+                        </li>
+                  </ul>
+
+            </div>
+
+            <div class="col-md-6" ng-if="vm.state.selectedSim.SimTypeName == 'Static'">
+                  <ul class="list-group">
+                        <li class="list-group-item">
+                              <label>Terminal Id (DE 41) </label>
+                              <br>
+                              <input type="text" class="form-control" ng-model="vm.state.selectedSim.TerminalUid" />
+                        </li>
+                        <li class="list-group-item">
+                              <label>Merchant Id (DE 42)</label>
+                              <br>
+                              <input type="text" class="form-control" ng-model="vm.state.selectedSim.MerchantUid" />
+                        </li>
+                        <li class="list-group-item">
+                              <label>Certification Host Mode </label>
+                              <br>
+                              <input type="text" class="form-control" ng-model="vm.state.selectedSim.CertHostUid" />
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="col-md-6" ng-if="vm.state.selectedSim.SimTypeName == 'Template'">
+                  <textarea ui-refresh="vm.state.selectedSim.TemplateSimXml" ng-model="vm.state.selectedSim.TemplateSimXml" ui-codemirror="{
+                lineNumbers: true,
+                theme:'twilight',              
+                lineWrapping : true,
+                mode: 'xml'
+                }">
+                        <!-- XML to configure dynamic sim -->
+                  </textarea>
+            </div>
+      </div>
+
+</div>
+<div class="modal-footer">
+      <button class="btn btn-info btn-sm" type="button" ng-click="vm.ok()">OK</button>
+      <button class="btn btn-info btn-sm" type="button" ng-click="vm.apply()">Apply</button>
+      <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancel()">Cancel</button>
+</div>

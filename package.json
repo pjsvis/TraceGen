@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
+    "bower": "^1.7.7",
     "del": "^2.2.0",
     "glob": "^7.0.0",
     "gulp": "^3.8.11",
@@ -30,13 +31,19 @@
     "gulp-concat-css": "^2.2.0",
     "gulp-cssnano": "^2.1.0",
     "gulp-inject": "^3.0.0",
+    "gulp-load-plugins": "^1.2.0",
     "gulp-nodemon": "^2.0.6",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-tslint": "^3.3.0-beta",
     "gulp-typescript": "^2.10.0",
     "gulp-uglify": "^1.5.2",
+<<<<<<< HEAD
     "lodash": "^4.5.0",
+=======
+    "lodash": "^4.3.0",
+    "main-bower-files": "^2.11.1",
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
     "path": "^0.12.7",
     "tslint": "^3.4.0",
     "typescript": "^1.7.5",

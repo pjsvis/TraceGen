@@ -1,55 +1,53 @@
 {
+<<<<<<< HEAD
   "name": "ag-grid",
   "version": "3.3.3",
   "description": "Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components",
   "main": "./main.js",
+=======
+  "name": "angular-grid",
+  "version": "1.16.1",
+  "description": "High performance and feature rich data grid for AngularJS",
+  "main": "dist/angular-grid.min.js",
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ceolter/ag-grid.git"
+    "url": "https://github.com/ceolter/angular-grid.git"
   },
   "keywords": [
-    "web-components",
     "grid",
     "data",
     "table",
-    "angular",
-    "angular-component",
-    "react",
-    "react-component",
-    "angularjs",
-    "reactjs"
+    "angular"
   ],
-  "author": "Niall Crosby <niall.crosby@gmail.com>",
+  "author": "Niall Crosby <info@angulargrid.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ceolter/ag-grid/issues"
+    "url": "https://github.com/ceolter/angular-grid/issues"
   },
-  "homepage": "http://www.ag-grid.com/",
+  "homepage": "http://www.angulargrid.com/",
   "devDependencies": {
-    "gulp": "3.9.0",
-    "gulp-foreach": "0.1.0",
-    "gulp-rename": "1.2.2",
-    "gulp-stylus": "2.2.0",
-    "gulp-uglify": "1.5.1",
-    "gulp-typescript": "2.10.0",
+    "gulp": "^3.8.11",
+    "gulp-foreach": "^0.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-stylus": "^2.0.1",
+    "gulp-uglify": "^1.2.0",
+    "gulp-typescript": "^2.5.0",
     "gulp-sourcemaps": "1.5.2",
+<<<<<<< HEAD
     "gulp-clean": "0.3.1",
     "gulp-header": "1.7.0",
+=======
+    "gulp-header": "^1.0.0",
+>>>>>>> 5c9374a07c80de015dbc49de547c1699293134f6
     "gulp-tsd": "0.0.4",
-    "style-loader": "0.13.0",
-    "css-loader": "0.23.1",
-    "json-stable-stringify": "1.0.0",
-    "jasmine-core": "2.4.1",
-    "gulp-jasmine": "2.2.1",
     "nib": "^1.1.0",
-    "stylus": "0.53.0",
-    "vinyl-buffer": "1.0.0",
-    "typescript": "1.7.5",
-    "merge2": "0.3.6",
-    "webpack-stream": "3.1.0",
-    "webpack": "1.12.12"
+    "stylus": "^0.50.0",
+    "vinyl-buffer": "^1.0.0",
+    "typescript": "1.5.3",
+    "merge2": "0.3.6"
   }
 }

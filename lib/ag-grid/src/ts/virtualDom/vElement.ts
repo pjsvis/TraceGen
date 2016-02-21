@@ -1,43 +1,49 @@
-import _ from '../utils';
+/// <reference path="../utils.ts" />
 
-export default class VElement {
+module awk.vdom {
 
-    static idSequence = 0;
+    var _ = awk.grid.Utils;
 
-    private id: number;
+    export class VElement {
 
-    private elementAttachedListeners: {(element: Element): void} [];
+        static idSequence = 0;
 
-    constructor() {
-        this.id = VElement.idSequence++;
-    }
+        private id: number;
 
-    public getId(): number {
-        return this.id;
-    }
+        private elementAttachedListeners: {(element: Element): void} [];
 
-    public addElementAttachedListener(listener: (element: Element)=>void) {
-        if (!this.elementAttachedListeners) {
-            this.elementAttachedListeners = [];
+        constructor() {
+            this.id = VElement.idSequence++;
         }
-        this.elementAttachedListeners.push(listener);
-    }
 
-    protected fireElementAttached(element: Element) {
-        if (!this.elementAttachedListeners) {
-            return;
+        public getId(): number {
+            return this.id;
         }
-        for (var i = 0; i<this.elementAttachedListeners.length; i++) {
-            var listener = this.elementAttachedListeners[i];
-            listener(element);
+
+        public addElementAttachedListener(listener: (element: Element)=>void) {
+            if (!this.elementAttachedListeners) {
+                this.elementAttachedListeners = [];
+            }
+            this.elementAttachedListeners.push(listener);
         }
-    }
 
-    // abstract
-    public elementAttached(element: Element) {
-        this.fireElementAttached(element);
-    }
+        protected fireElementAttached(element: Element) {
+            if (!this.elementAttachedListeners) {
+                return;
+            }
+            for (var i = 0; i<this.elementAttachedListeners.length; i++) {
+                var listener = this.elementAttachedListeners[i];
+                listener(element);
+            }
+        }
 
-    public toHtmlString(): string { return null; }
+        // abstract
+        public elementAttached(element: Element) {
+            this.fireElementAttached(element);
+        }
+
+        public toHtmlString(): string { return null; }
+
+    }
 
 }

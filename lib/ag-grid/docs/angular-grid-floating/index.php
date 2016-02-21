@@ -12,7 +12,7 @@ include '../documentation_header.php';
 
     <p>
         Floating rows hang either above or below the normal rows of a table. This feature is also called
-        Frozen rows in other grids. In ag-Grid they are called Floating Rows.
+        Frozen rows in other grids. In ag-Grid they are called Floating rows.
     </p>
 
     <p>
@@ -46,13 +46,6 @@ include '../documentation_header.php';
         callback you can use to give floating cells a different cellRenderer to the other cells. If both cellRenderer
         and floatingCellRenderer are provided, frozen cells will use floatingCellRenderer if available, if not then
         cellRenderer.
-    </p>
-
-    <h3>Example</h3>
-
-    <p>
-        Example below shows floating rows. To mix things up a bit, the example also has pinned left and right
-        columns, to show the floating rows playing nicely with pinning.
     </p>
 
     <show-example example="exampleFloating" example-height="450px"></show-example>

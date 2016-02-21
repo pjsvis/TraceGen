@@ -1,0 +1,105 @@
+<!-- NOTE: This page is currently not in use. Instead we go straight to ProvisionSim/#/SimTestSuites -->
+<div class="container space-top" ng-controller="ProvisionSimController as vm">
+
+    <div class="col-md-3" ng-show="vm.data.Simulators.length > 0">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                All Active Simulators
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="sim in vm.data.Simulators">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-random space-right"></i>{{sim.SimName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-book space-right"></i>Manage Test Suites</a>
+                        <br>
+                        <a href=""><i class="glyphicon glyphicon-user space-right"></i>Manage Testers</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3" ng-show="vm.data.Testers.length > 0">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                All Active Testers
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="t in vm.data.Testers">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-user space-right"></i>{{t.UserName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-random space-right"></i>Manage Simulators</a>
+                        <br>
+                        <a href=""><i class="glyphicon glyphicon-book space-right"></i>Manage Test Suites</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3" ng-show="vm.data.SimulatorsWithoutTestSuites.length > 0">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                Simulators Without Test Suites
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="sim in vm.data.SimulatorsWithoutTestSuites">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-random space-right"></i>{{sim.SimName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-book space-right"></i>Assign Test Suites</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3" ng-show="vm.data.TestersWithoutSimulators.length > 0">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                Testers Without Simulators
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="t in vm.data.TestersWithoutSimulators">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-user space-right"></i>{{t.UserName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-random space-right"></i>Assign Simulator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-3" ng-show="vm.data.SimulatorsWithoutTesters.length > 0">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                Simulators Without Testers
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="sim in vm.data.SimulatorsWithoutTesters">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-random space-right"></i>{{sim.SimName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-user space-right"></i>Assign Testers</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3" ng-show="vm.data.TestSuitesWithoutTests.length > 0">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                Test Suites Without Tests
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="ts in vm.data.TestSuitesWithoutTests">
+                        <h4 class="list-group-item-heading text-muted"><i class="glyphicon glyphicon-book space-right"></i>{{ts.TestSuiteName}}</h4>
+                        <a href=""><i class="glyphicon glyphicon-list space-right"></i>Assign Tests</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

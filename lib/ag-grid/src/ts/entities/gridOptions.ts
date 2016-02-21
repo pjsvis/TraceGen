@@ -1,126 +1,111 @@
-import {RowNode} from './rowNode';
-import {GridApi} from "../gridApi";
-import {ColumnApi} from "../columnController/columnController";
+/// <reference path="colDef.ts" />
 
-/****************************************************************
- ****************************************************************
- *                                                              *
- * Don't forget to update ComponentUtil if changing this class. *
- *                                                              *
- ****************************************************************
- ****************************************************************/
-export interface GridOptions {
+module awk.grid {
 
-    // set once in init, can never change
-    virtualPaging?: boolean;
-    toolPanelSuppressGroups?: boolean;
-    toolPanelSuppressValues?: boolean;
-    rowsAlreadyGrouped?: boolean;
-    suppressRowClickSelection?: boolean;
-    suppressCellSelection?: boolean;
-    sortingOrder?: string[];
-    suppressMultiSort?: boolean;
-    suppressHorizontalScroll?: boolean;
-    unSortIcon?: boolean;
-    rowBuffer?: number;
-    enableColResize?: boolean;
-    enableCellExpressions?: boolean;
-    enableSorting?: boolean;
-    enableServerSideSorting?: boolean;
-    enableFilter?: boolean;
-    enableServerSideFilter?: boolean;
-    colWidth?: number;
-    minColWidth?: number;
-    maxColWidth?: number;
-    suppressMenuHide?: boolean;
-    singleClickEdit?: boolean;
-    debug?: boolean;
-    icons?: any; // should be typed
-    angularCompileRows?: boolean;
-    angularCompileFilters?: boolean;
-    angularCompileHeaders?: boolean;
-    suppressLoadingOverlay?: boolean;
-    suppressNoRowsOverlay?: boolean;
-    suppressAutoSize?: boolean;
-    suppressMovingCss?: boolean;
-    suppressMovableColumns?: boolean;
-    suppressParentsInRowNodes?: boolean;
+    export interface GridOptions {
 
-    // just set once
-    localeText?: any;
-    localeTextFunc?: Function;
-    suppressScrollLag?: boolean;
+        // set once in init, can never change
+        virtualPaging?: boolean;
+        toolPanelSuppressPivot?: boolean;
+        toolPanelSuppressValues?: boolean;
+        rowsAlreadyGrouped?: boolean;
+        suppressRowClickSelection?: boolean;
+        suppressCellSelection?: boolean;
+        sortingOrder?: string[];
+        suppressMultiSort?: boolean;
+        suppressHorizontalScroll?: boolean;
+        unSortIcon?: boolean;
+        rowHeight?: number;
+        rowBuffer?: number;
+        enableColResize?: boolean;
+        enableCellExpressions?: boolean;
+        enableSorting?: boolean;
+        enableServerSideSorting?: boolean;
+        enableFilter?: boolean;
+        enableServerSideFilter?: boolean;
+        icons?: any; // should be typed
+        colWidth?: number;
+        localeText?: any;
+        suppressMenuHide?: boolean;
+        debug?: boolean;
 
-    groupSuppressAutoColumn?: boolean;
-    groupSelectsChildren?: boolean;
-    groupHideGroupColumns?: boolean;
-    groupIncludeFooter?: boolean;
-    groupUseEntireRow?: boolean;
-    groupSuppressRow?: boolean;
-    groupSuppressBlankHeader?: boolean;
-    forPrint?: boolean;
-    groupColumnDef?: any; // change to typed
+        angularCompileRows?: boolean;
+        angularCompileFilters?: boolean;
+        angularCompileHeaders?: boolean;
 
-    // changeable, but no immediate impact
-    context?: any;
-    rowStyle?: any;
-    rowClass?: any;
-    groupDefaultExpanded?: number;
-    slaveGrids?: GridOptions[];
-    rowSelection?: string;
-    rowDeselection?: boolean;
-    overlayLoadingTemplate?: string;
-    overlayNoRowsTemplate?: string;
-    checkboxSelection?: Function;
-    rowHeight?: number;
-    headerCellTemplate?: string;
+        groupSuppressAutoColumn?: boolean;
+        groupSelectsChildren?: boolean;
+        groupHidePivotColumns?: boolean;
+        groupIncludeFooter?: boolean;
+        groupUseEntireRow?: boolean;
+        groupColumnDef?: any; // change to typed
+        groupSuppressRow?: boolean;
+        groupSuppressBlankHeader?: boolean;
+        dontUseScrolls?: boolean;
 
-    // changeable with impact
-    rowData?: any[]; // should this be immutable for ag2?
-    floatingTopRowData?: any[]; // should this be immutable ag2?
-    floatingBottomRowData?: any[]; // should this be immutable ag2?
-    showToolPanel?: boolean;
-    columnDefs?: any[]; // change to typed
-    datasource?: any; // should be typed
-    // in properties
-    headerHeight?: number;
+        // changeable with impact
+        rowData?: any[]; // should this be immutable for ag2?
+        floatingTopRowData?: any[]; // should this be immutable ag2?
+        floatingBottomRowData?: any[]; // should this be immutable ag2?
+        rowSelection?: string;
+        rowDeselection?: boolean;
+        showToolPanel?: boolean;
+        groupKeys?: string[];
+        groupAggFunction?(nodes: any[]): any;
+        groupAggFields?: string[];
+        columnDefs?: any[]; // change to typed
+        datasource?: any; // should be typed
+        pinnedColumnCount?: number;
+        // in properties
+        groupHeaders?: boolean;
+        headerHeight?: number;
 
-    // callbacks
-    groupRowInnerRenderer?(params: any): void;
-    groupRowRenderer?: Function | Object;
-    isScrollLag?(): boolean;
-    isExternalFilterPresent?(): boolean;
-    doesExternalFilterPass?(node: RowNode): boolean;
-    getRowStyle?: Function;
-    getRowClass?: Function;
-    getRowHeight?: Function;
-    headerCellRenderer?: any;
-    groupAggFunction?(nodes: any[]): any;
-    getBusinessKeyForNode?(node: RowNode): string;
-    getHeaderCellTemplate?: (params: any) => string | HTMLElement;
+        // changeable, but no immediate impact
+        context?: any;
+        rowStyle?: any;
+        rowClass?: any;
+        headerCellRenderer?: any;
+        groupDefaultExpanded?: any;
+        slaveGrids?: GridOptions[];
 
-    // events
-    onGridReady?(params: any): void;
-    onModelUpdated?(): void;
-    onCellClicked?(params: any): void;
-    onCellDoubleClicked?(params: any): void;
-    onCellContextMenu?(params: any): void;
-    onCellValueChanged?(params: any): void;
-    onCellFocused?(params: any): void;
-    onRowSelected?(params: any): void;
-    onRowDeselected?(params: any): void;
-    onSelectionChanged?(): void;
-    onBeforeFilterChanged?(): void;
-    onAfterFilterChanged?(): void;
-    onFilterModified?(): void;
-    onBeforeSortChanged?(): void;
-    onAfterSortChanged?(): void;
-    onVirtualRowRemoved?(params: any): void;
-    onRowClicked?(params: any): void;
-    onRowDoubleClicked?(params: any): void;
-    onGridSizeChanged?(params: any): void;
+        // callbacks
+        ready?(api: any): void;
+        groupInnerRenderer?(params: any): void;
+        groupRowInnerRenderer?(params: any): void;
+        groupRowRenderer?: Function | Object;
+        isScrollLag?(): boolean;
+        suppressScrollLag?(): boolean;
+        isExternalFilterPresent?(): boolean;
+        doesExternalFilterPass?(node: RowNode): boolean;
 
-    // apis, set by the grid on init
-    api?: GridApi; // change to typed
-    columnApi?: ColumnApi; // change to typed
+        // events
+        modelUpdated?(): void;
+        cellClicked?(params: any): void;
+        cellDoubleClicked?(params: any): void;
+        cellValueChanged?(params: any): void;
+        cellFocused?(params: any): void;
+        rowSelected?(params: any): void;
+        selectionChanged?(): void;
+        beforeFilterChanged?(): void;
+        afterFilterChanged?(): void;
+        filterModified?(): void;
+        beforeSortChanged?(): void;
+        afterSortChanged?(): void;
+        virtualRowRemoved?(params: any): void;
+        rowClicked?(params: any): void;
+
+        // deprecated
+        columnResized?(column: Column):void;
+        columnVisibilityChanged?(columns: Column[]):void;
+        columnOrderChanged?(columns: Column[]):void;
+
+        // unknown
+        selectedRows?: any[];
+        selectedNodesById?: {[email: number]: any;}; // should be typed to node
+
+        // apis, set by the grid on init
+        api?: GridApi; // change to typed
+        columnApi?: ColumnApi; // change to typed
+    }
+
 }

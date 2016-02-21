@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-cloak>
+<head>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- The base element defines the root path for the site -->
+   <base id="baseHref" href="@Url.Content("~/")">
+   @if (HttpContext.Current.IsDebuggingEnabled)
+   {
+      <link href="node_modules/less/dist/less.min.js" rel="stylesheet" />
+   }
+
+   <title>@ViewBag.Title - OTS :: UTP</title>
+   <!-- We don't support HTML4 or IE <= 9 -->
+   <script src="@Url.Content("~/scripts/browserCaps.js")"></script>
+   <script type="text/javascript">
+      // Redirect if HTML4 browser or IE9 or less
+      if (browser.isIe() && browser.getVersion() <= 9 || !browser.cutsTheMustard()) {
+         document.location.href = '@Url.Content("~/UnsupportedBrowser.html")';
+      }
+   </script>
+
+   <!-- NOTE: We need to put versioned css assets here not in BundleConfig.cs -->
+   <link href="~/css/custom-bootstrap.css?v=1.07" rel="stylesheet" />
+   <link href="~/Content/BundleFontFix.css" rel="stylesheet" />
+
+   <!-- bower:css -->
+   <!-- endbower -->
+
+   <!-- Manually inject ag-grid as wiredep makes a mess of it -->
+   <link rel="stylesheet" href="src/ag-grid/ag-grid.min.css"/> 
+   <!-- inject:css -->
+   <link rel="stylesheet" href="/build/lib/angular-grid.css">
+   <link rel="stylesheet" href="/build/lib/angular-toastr.css">
+   <link rel="stylesheet" href="/build/lib/bootstrap.css">
+   <link rel="stylesheet" href="/build/lib/codemirror.css">
+   <link rel="stylesheet" href="/build/lib/font-awesome.css">
+   <link rel="stylesheet" href="/build/lib/select.css">
+   <link rel="stylesheet" href="/build/lib/theme-dark.css">
+   <link rel="stylesheet" href="/build/lib/theme-fresh.css">
+   <link rel="stylesheet" href="/build/lib/ya-treeview.min.css">
+   <!-- endinject -->
+
+
+   <link rel="SHORTCUT ICON" href="~/Images/favicon.ico" />
+
+   <meta name="description" content="OTS Unattended Testing" />
+</head>
+<body>
+
+   <!-- Don't show the navbar until we are logged in-->
+   @if (Request.IsAuthenticated)
+   {
+      if (@Request.Url != null && !@Request.Url.GetLeftPart(UriPartial.Path).ToLower().Contains("login"))
+      {
+         <div ng-include="'scripts/app/templates/nav/nav.tpl.html'"></div>
+      }
+   }
+   <!-- End of navbar -->
+   <div class="body-content">
+      @RenderBody()
+   </div>
+
+   @RenderSection("scripts", required: false)
+   @RenderSection("jsScripts", required: false)
+
+   <!-- NOTE: We put this down here below where we load our scripts -->
+   @if (Request.IsAuthenticated)
+   {
+      @Html.Partial("_IdlePartial")
+   }
+
+<script>
+
+   /// <reference path="../../../typings/tsd.d.ts" />
+   angular.module('app').factory('SystemInfoService', function($http, $browser) {
+      var fac = {};
+      var baseHref = $browser.baseHref();
+      fac.getSystemInfo = function() {
+         return $http({
+            method: 'GET',
+            url: baseHref + 'api/app/SystemInfo',
+            cache: true
+         }).then(function(response) {
+            return response;
+         });
+      }
+      return fac;
+   });
+
+   angular.module('app').controller('NavController', function(UserDetails, SystemInfoService) {
+      var vm = this;
+      UserDetails.get().then(function(data) {
+         vm.userDetails = data;
+      });
+      SystemInfoService.getSystemInfo().then(function(response) {
+         vm.systemInfo = response.data;
+      });
+   });
+</script>
+
+   <!-- bower:js -->
+   <!-- endbower -->
+   <!-- Not sure whay angular grid 1.15.0 only works if we inject it from our src folder -->
+   <script src="lib/ag-grid/ag-grid.min.js"></script>
+   <!--<script src="lib/ag-grid/dist/angular-grid.min.js"></script>-->
+
+   <!-- inject:js -->
+   <script src="/build/lib/angular-animate.js"></script>
+   <script src="/build/lib/angular-cookies.js"></script>
+   <script src="/build/lib/angular-grid.js"></script>
+   <script src="/build/lib/angular-idle.js"></script>
+   <script src="/build/lib/angular-moment.js"></script>
+   <script src="/build/lib/angular-route.js"></script>
+   <script src="/build/lib/angular-sanitize.js"></script>
+   <script src="/build/lib/angular-toastr.tpls.js"></script>
+   <script src="/build/lib/angular-translate.js"></script>
+   <script src="/build/lib/angular.js"></script>
+   <script src="/build/lib/bootstrap.js"></script>
+   <script src="/build/lib/codemirror.js"></script>
+   <script src="/build/lib/jquery.js"></script>
+   <script src="/build/lib/jquery.signalR.js"></script>
+   <script src="/build/lib/lodash.js"></script>
+   <script src="/build/lib/moment.js"></script>
+   <script src="/build/lib/ng-file-upload.js"></script>
+   <script src="/build/lib/ngStorage.js"></script>
+   <script src="/build/lib/select.js"></script>
+   <script src="/build/lib/signalr-hub.js"></script>
+   <script src="/build/lib/ui-bootstrap-tpls.js"></script>
+   <script src="/build/lib/ui-codemirror.js"></script>
+   <script src="/build/lib/ya-treeview-tpls.min.js"></script>
+   <!-- endinject -->
+   <script src="/src/templates.js "></script>
+</body>
+</html>

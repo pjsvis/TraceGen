@@ -9,7 +9,7 @@
 {
 	"version": "0.1.0",
 	"command": "gulp",
-	"isShellCommand": true,
+	"isShellCommand": true,    
 	"tasks": [
 		{
 			"taskName": "serve",

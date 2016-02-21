@@ -11,13 +11,8 @@ include '../documentation_header.php';
     <h2>Internationalisation</h2>
 
     <p>
-        You can change the text in the paging panels and the default filters by providing a <i>localeText</i> or
-        a <i>localeTextFunc</i> to the <i>gridOptions</i>.</p>
-
-    <h3>Using <i>localeText</i></h3>
-
-    <p>
-        The example below shows all the text that can be defined.
+        You can change the text in the paging panels and the default filters by providing a <i>localeText</i> to
+        the <i>gridOptions</i>. The example below shows all the text that can be defined.
     </p>
 
     <pre>    $scope.gridOptions = {
@@ -54,45 +49,14 @@ include '../documentation_header.php';
             group: 'laGroup',
             // tool panel
             columns: 'laColumns',
-            groupColumns: 'laGroup Cols',
-            groupColumnsEmptyMessage: 'la please drag cols to here',
+            pivotedColumns: 'laPivot Cols',
+            pivotedColumnsEmptyMessage: 'la please drag cols to here',
             valueColumns: 'laValue Cols',
             valueColumnsEmptyMessage: 'la please drag cols to here'
         }
     };</pre>
 
     <show-example example="internationalisation"></show-example>
-
-    <h3>Using <i>localeTextFunc</i></h3>
-
-    <p>
-        The example above works great if all you are translating is ag-Grid. However what if you want
-        to bind into your wider applications internationalisation? That can be done by providing your
-        own <i>localeTextFunc</i>, which is an alternative to the above.
-    </p>
-
-    <p>
-        The sample code below shows how such a function can used. The function takes the key from the grid
-        and uses a translate function outside of the grid for doing the translation. If no match is found,
-        then the default value should be returned (which is the English value for the grid, the grids
-        default language).
-    </p>
-
-    <pre>var gridOptions = {
-    enableSorting: true,
-    enableFilter: true,
-    enableColResize: true,
-    columnDefs: columnDefs,
-    localeTextFunc: function(key, defaultValue) {
-        // to avoid key clash with external keys, we add 'grid' to the start of each key.
-        var gridKey = 'grid.' + key;
-        // look the value up. here we use the AngularJS $filter service, however you can use whatever
-        // service you want, AngularJS or otherwise.
-        var value = $filter('translate')(gridKey);
-        return value === gridKey ? defaultValue : value;
-    }
-};</pre>
-
 </div>
 
 <?php include '../documentation_footer.php';?>

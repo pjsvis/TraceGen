@@ -3,11 +3,15 @@ angular.module('app', [
     'ngSanitize', 'ngRoute', 'ngCookies', 'ngAnimate',
     'toastr', 'ngIdle', 'ui.bootstrap', 'SignalR',
     'ya.treeview', 'ya.treeview.tpls',
-    'angularMoment', 'pascalprecht.translate', 
-    'ngFileUpload', 'ngStorage', 'ui.select',
-    'ui.codemirror', // 'agGrid',
-    'app.demo',
-    'app.templates'
+    'pascalprecht.translate', 
+    'angularMoment',
+    'ngFileUpload', 
+    'ngStorage', 
+    'ui.select',
+    'ui.codemirror',  
+    'agGrid',
+    'app.demo', 
+    'app.templates'  // the app templates module is the html compiled to javascript
 ]);
 
 angular.module('app').controller('test', function() {
